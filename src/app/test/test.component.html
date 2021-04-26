@@ -1,0 +1,17 @@
+<div class="contain flexbox-center-center">
+  <div class="board flexbox-start-start">
+      <div class='list-chessman flexbox-start-start' *ngFor="let eachKeyBoard of keyBoard">
+          <div class="chessman" *ngFor="let eachKeyBoard of eachKeyBoard"
+          [class.highlight-bad]="eachKeyBoard.highlightPosition == 'enemy'"
+          [class.highlight-good]="eachKeyBoard.highlightPosition == 'ally'"
+          (click)="moveChessman(eachKeyBoard)"
+          >
+              <div class="position">[{{eachKeyBoard.position[0]}},{{eachKeyBoard.position[1]}}]</div>
+              <div class="stt">{{eachKeyBoard.idKeyBoard}}</div>
+              <div class="wrapp" *ngIf="eachKeyBoard.status == 'occupy'">
+                  <img src="./../assets/chess/v_1/{{eachKeyBoard.chessman.image}}" />
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
