@@ -3,14 +3,15 @@ import * as Var from './../common/variable';
 import * as Func from './../common/function';
 
 @Component({
-  selector: 'app-test',
-  templateUrl: './test.component.html',
-  styleUrls: ['./test.component.scss']
+  selector: 'app-minimax',
+  templateUrl: './minimax.component.html',
+  styleUrls: ['./minimax.component.scss']
 })
-export class TestComponent implements OnInit {
+export class MinimaxComponent implements OnInit {
 
   keyBoard = [];
   keyBoardBackUp = [];
+  depth_length = 1;
 
   chessmanWaiting: any;
   list_array_sort = [];
@@ -479,54 +480,66 @@ export class TestComponent implements OnInit {
 
               if (keyBoard[row][col].chessman.nameChessman == 'pawn') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.pawnEvalBlack[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.pawnEvalBlack[row][col];
+                // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.pawnEvalBlack[row][col];
+                blackNum = blackNum + keyBoard[row][col].chessman.point
               }
               if (keyBoard[row][col].chessman.nameChessman == 'knight') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.knightEval[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.knightEval[row][col];
+                // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.knightEval[row][col];
+                blackNum = blackNum + keyBoard[row][col].chessman.point
               }
               if (keyBoard[row][col].chessman.nameChessman == 'king') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.kingEvalBlack[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.kingEvalBlack[row][col];
+                // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.kingEvalBlack[row][col];
+                blackNum = blackNum + keyBoard[row][col].chessman.point
               }
               if (keyBoard[row][col].chessman.nameChessman == 'castle') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.rookEvalBlack[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.rookEvalBlack[row][col];
+                // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.rookEvalBlack[row][col];
+                blackNum = blackNum + keyBoard[row][col].chessman.point
               }
               if (keyBoard[row][col].chessman.nameChessman == 'bishop') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.bishopEvalBlack[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.bishopEvalBlack[row][col];
+                // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.bishopEvalBlack[row][col];
+                blackNum = blackNum + keyBoard[row][col].chessman.point
               }
               if (keyBoard[row][col].chessman.nameChessman == 'queen') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.evalQueen[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.evalQueen[row][col];
+                // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.evalQueen[row][col];
+                blackNum = blackNum + keyBoard[row][col].chessman.point
               }
             }
             if (keyBoard[row][col].chessman.color == 'white') {
 
               if (keyBoard[row][col].chessman.nameChessman == 'pawn') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.pawnEvalWhite[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.pawnEvalWhite[row][col];
+                // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.pawnEvalWhite[row][col];
+                whitekNum = whitekNum + keyBoard[row][col].chessman.point
               }
               if (keyBoard[row][col].chessman.nameChessman == 'knight') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.knightEval[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.knightEval[row][col];
+                // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.knightEval[row][col];
+                whitekNum = whitekNum + keyBoard[row][col].chessman.point
               }
               if (keyBoard[row][col].chessman.nameChessman == 'king') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.kingEvalWhite[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.kingEvalWhite[row][col];
+                // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.kingEvalWhite[row][col];
+                whitekNum = whitekNum + keyBoard[row][col].chessman.point
               }
               if (keyBoard[row][col].chessman.nameChessman == 'castle') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.rookEvalWhite[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.rookEvalWhite[row][col];
+                // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.rookEvalWhite[row][col];
+                whitekNum = whitekNum + keyBoard[row][col].chessman.point
               }
               if (keyBoard[row][col].chessman.nameChessman == 'bishop') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.bishopEvalWhite[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.bishopEvalWhite[row][col];
+                // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.bishopEvalWhite[row][col];
+                whitekNum = whitekNum + keyBoard[row][col].chessman.point
               }
               if (keyBoard[row][col].chessman.nameChessman == 'queen') {
                 // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.evalQueen[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.evalQueen[row][col];
+                // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.evalQueen[row][col];
+                whitekNum = whitekNum + keyBoard[row][col].chessman.point
               }
             }
           }
@@ -605,7 +618,7 @@ export class TestComponent implements OnInit {
         // this.getPoint(this.keyBoard)
         // console.log(this.keyBoard);
         // this.enemy = this.updateEnemy('black', this.keyBoard);
-        // console.log(this.enemy);
+        // console.log(this.getPoint(this.keyBoard));
         setTimeout(() => {
           this.enemyMove();
         }, 0)
@@ -613,81 +626,265 @@ export class TestComponent implements OnInit {
     }
   }
 
-  minimax(keyBoard, depth, maximizingPlayer, color) {
-    return (this.alphabeta(keyBoard, depth, -10000, 10000, maximizingPlayer, color));
+  minimax(keyBoard, depth, maximizingPlayer, color, j) {
+    return (this.alphabeta(keyBoard, depth, -10000, 10000, maximizingPlayer, color, j));
   }
 
-  alphabeta(keyBoard, depth, a, b, maximizingPlayer, color) {
+  alphabeta(keyBoard, depth, a, b, maximizingPlayer, color, item_father) {
 
     let movingOn = false;
-    let list_keyBoard_depth_1 = [];
-    let enemy = Func.updateEnemy(color, this.keyBoard);
+    let case_alpha_beta = false;
+    let index = 0;
+    let enemy = [];
+
+    // console.log(item_father)
+
+    enemy = Func.updateEnemy(color, keyBoard);
+    // console.log(enemy)
     for (let i = 0; i < enemy.length; i++) {
       if (enemy[i].availablePosition[0] != undefined) {
         movingOn = true;
-        for (let j = 0; j < enemy[i].availablePosition.length; j++) {
-          let keyBoardDepth1 = [];
-          // console.log(enemy[i].availablePosition[])
-          // console.log([...this.keyBoard]);
-          keyBoardDepth1 = [...this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], [...this.keyBoard])];
-          // console.log(keyBoardDepth1)
-          keyBoardDepth1 = this.resetHighlightPosition([...keyBoardDepth1]);
-          // console.log(keyBoardDepth1)
-          list_keyBoard_depth_1.push(keyBoardDepth1);
-
-          // console.log(this.keyBoard);
-          // console.log(this.keyBoard);
-
-          // console.log(list_keyBoard_depth_1);
-          // console.log(enemy[i].availablePosition[j].position)
-          // console.log(list_keyBoard_depth_1);
-          // if (j == 0) {
-          //   break;
-          // }
-        }
-        // break
+        break;
       }
     }
 
-    if (depth == 1) {
-      this.keyBoardDepth1 = [...list_keyBoard_depth_1];
-      for (let m = 0; m < list_keyBoard_depth_1.length; m++) {
-        this.list_point_depth1.push(this.getPoint(list_keyBoard_depth_1[m]));
-      }
-    }
+    // if (depth == 1) {
+    //   this.keyBoardDepth1 = [...list_keyBoard_depth_1];
+    //   for (let m = 0; m < list_keyBoard_depth_1.length; m++) {
+    //     this.list_point_depth1.push(this.getPoint(list_keyBoard_depth_1[m]));
+    //   }
+    // }
 
     // console.log(keyBoard, a, b, maximizingPlayer);
-    if (movingOn == false || depth == 0) {
+    if (movingOn == false || depth == 2) {
+      if (item_father.depth1) {
+      }
       //   console.log(depth)
       //   console.log('keyBoard: ' + keyBoard);
+      // console.log(this.getPoint(keyBoard))
+      // this.list_point_depth1.push(this.getPoint(keyBoard));
       return this.getPoint(keyBoard);
     }
+
     if (maximizingPlayer == 'max') {
 
-      for (let i = 0; i < list_keyBoard_depth_1.length; i++) {
-        a = Math.max(a, this.alphabeta(list_keyBoard_depth_1[i], depth - 1, a, b, 'min', 'white'));
-        // console.log(keyBoard);
-        // console.log('a: cho goi ham max' + '-----------' + a);
-        if (a >= b) {
-          // console.log('a: ' + a);
-          // console.log('b: ' + b);
-
+      for (let i = 0; i < enemy.length; i++) {
+        if (case_alpha_beta) {
           break;
+        } else {
+          if (enemy[i].availablePosition[0] != undefined) {
+            movingOn = true;
+            for (let j = 0; j < enemy[i].availablePosition.length; j++) {
+              let keyBoardValue = [];
+              let item = {
+                depth1: null,
+                depth2: null,
+                depth3: null,
+                point: null,
+              };
+              keyBoardValue = [...this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], [...this.keyBoard])];
+              // console.log(keyBoardDepth1)
+              keyBoardValue = this.resetHighlightPosition([...keyBoardValue]);
+              // console.log(keyBoardValue)
+              item.depth1 = item_father.depth1;
+              item.depth2 = item_father.depth2;
+              item.depth3 = item_father.depth3;
+              item.point = this.getPoint(keyBoardValue);
+
+              if (depth == 0) {
+                item.depth1 = index;
+                this.keyBoardDepth1.push(keyBoardValue);
+              }
+
+              if (depth == 1) {
+                item.depth2 = index;
+                // this.keyBoardDepth2.length == this.keyBoardDepth1.length;
+                // this.keyBoardDepth2[item.depth1].push(keyBoardValue);
+              }
+
+              if (depth == 2) {
+                item.depth3 = index;
+                this.keyBoardDepth3.push({
+                  item: item,
+                  keyBoard: keyBoardValue
+                })
+              }
+              index++;
+
+              a = Math.max(a, this.alphabeta(keyBoardValue, depth + 1, a, b, 'min', 'white', item));
+              if (a >= b) {
+                case_alpha_beta = true;
+                break;
+              }
+            }
+          }
         }
       }
       return a;
     } else {
-      for (let i = 0; i < list_keyBoard_depth_1.length; i++) {
-        b = Math.min(b, this.alphabeta(list_keyBoard_depth_1[i], depth - 1, a, b, 'max', 'black'));
-        // console.log(keyBoard);
-        // console.log('b: cho goi ham min' + '--------' + b);
-        if (a >= b) {
-          // console.log('a: ' + a);
-          // console.log('b: ' + b);
+      // if (item_father.depth1 == 21) {
+      //   console.log(keyBoard)
+      //   console.log(enemy)
+      // }
+      // console.log("min")
+      // console.log(enemy)
+      for (let i = 0; i < enemy.length; i++) {
+        if (case_alpha_beta) {
           break;
+        } else {
+          if (enemy[i].availablePosition[0] != undefined) {
+            movingOn = true;
+            for (let j = 0; j < enemy[i].availablePosition.length; j++) {
+              let keyBoardValue = [];
+              let item = {
+                depth1: null,
+                depth2: null,
+                depth3: null,
+                point: null,
+              }; 6
+              keyBoardValue = [...this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], [...keyBoard])];
+              // console.log(keyBoardDepth1)
+              keyBoardValue = this.resetHighlightPosition([...keyBoardValue]);
+              // console.log(keyBoardValue)
+              item.depth1 = item_father.depth1;
+              item.depth2 = item_father.depth2;
+              item.depth3 = item_father.depth3;
+              item.point = this.getPoint(keyBoardValue);
+              // console.log(item)
+              if (depth == 0) {
+                item.depth1 = index;
+                // this.keyBoardDepth1.push(keyBoardValue);
+              }
+
+              if (depth == 1) {
+                item.depth2 = index;
+                // item.point = this.getPoint()
+                this.keyBoardDepth2.push({
+                  item: item,
+                  keyBoard: keyBoardValue
+                })
+              }
+
+              if (depth == 2) {
+                item.depth3 = index;
+                // this.keyBoardDepth3.length == this.keyBoardDepth1.length;
+                // this.keyBoardDepth3[item.depth1].length == this.keyBoardDepth2.length;
+                // this.keyBoardDepth3[item.depth1][item.depth2].push(keyBoardValue);
+              }
+              index++
+              b = Math.min(b, this.alphabeta(keyBoardValue, depth + 1, a, b, 'max', 'black', item));
+              if (a >= b) {
+                case_alpha_beta = true;
+                break;
+              }
+            }
+          }
         }
       }
       return b;
+    }
+  }
+
+  alphabeta2(keyBoard, depth, a, b, maximizingPlayer, color, item_father) {
+
+    let case_alpha_beta = false;
+    let movingOn = false;
+    let index = 0;
+
+    if (depth == 0) {
+      //   console.log(depth)
+      //   console.log('keyBoard: ' + keyBoard);
+      console.log(this.getPoint(keyBoard))
+      return this.getPoint(keyBoard);
+    }
+
+    this.enemy = Func.updateEnemy(color, this.keyBoard);
+    // console.log(this.enemy)
+    for (let i = 0; i < this.enemy.length; i++) {
+      if (case_alpha_beta == true) {
+        break;
+      } else {
+        if (this.enemy[i].availablePosition[0] != undefined) {
+          movingOn = true;
+          for (let j = 0; j < this.enemy[i].availablePosition.length; j++) {
+            let keyBoardValue = [];
+            let item = {
+              depth1: null,
+              depth2: null,
+              depth3: null,
+            };
+            // console.log(this.enemy[i].availablePosition[])
+            // console.log([...this.keyBoard]);
+            keyBoardValue = [...this.enemyMoveEmulator(this.enemy[i].position, this.enemy[i].availablePosition[j].position, this.enemy[i], [...this.keyBoard])];
+            // console.log(keyBoardDepth1)
+            keyBoardValue = this.resetHighlightPosition([...keyBoardValue]);
+            // console.log(keyBoardValue)
+            // console.log(this.getPoint(keyBoardValue));
+            if (maximizingPlayer == 'max') {
+              // item = item_father;
+              // if (depth == 1) {
+              //   item.depth1 = index;
+              //   index++;
+              //   this.keyBoardDepth1.push(keyBoardValue);
+              // }
+
+              // if (depth == 2) {
+              //   item.depth2 = index;
+              //   index++;
+              //   this.keyBoardDepth2.length == this.keyBoardDepth1.length;
+              //   this.keyBoardDepth2[item.depth1].push(keyBoardValue);
+              // }
+
+              // if (depth == 3) {
+              //   item.depth3 = index;
+              //   index++;
+              //   this.keyBoardDepth3.length == this.keyBoardDepth1.length;
+              //   this.keyBoardDepth3[item.depth1].length == this.keyBoardDepth2.length;
+              //   this.keyBoardDepth3[item.depth1][item.depth2].push(keyBoardValue);
+              // }
+
+              a = Math.max(a, this.alphabeta(keyBoardValue, depth - 1, a, b, 'min', 'white', item));
+              // console.log(keyBoard);
+              // console.log('a: cho goi ham max' + '-----------' + a);
+              if (a >= b) {
+                case_alpha_beta = true;
+                break;
+              }
+              return a;
+            } else {
+
+              b = Math.min(b, this.alphabeta(keyBoardValue, depth - 1, a, b, 'max', 'black', item));
+              // console.log(keyBoard);
+              // console.log('b: cho goi ham min' + '--------' + b);
+              if (a >= b) {
+                case_alpha_beta = true;
+                break;
+              }
+              return b;
+            }
+
+            // console.log(keyBoardDepth1)
+
+            // console.log(this.keyBoard);
+            // console.log(this.keyBoard);
+
+            // console.log(list_keyBoard_depth_1);
+            // console.log(this.enemy[i].availablePosition[j].position)
+            // console.log(list_keyBoard_depth_1);
+            // if (j == 0) {
+            //   break;
+            // }
+          }
+          // break
+        }
+      }
+    }
+
+    // console.log(keyBoard, a, b, maximizingPlayer);
+    if (movingOn == false) {
+      //   console.log(depth)
+      //   console.log('keyBoard: ' + keyBoard);
+      return this.getPoint(keyBoard);
     }
   }
 
@@ -698,21 +895,57 @@ export class TestComponent implements OnInit {
     this.keyBoardDepth3 = [];
 
     this.list_point_depth1 = [];
-    this.list_point_depth2 = [];
-    this.list_point_depth3 = [];
+    this.list_point_depth2 = [[]];
+    this.list_point_depth3 = [[[]]];
     // console.log(this.keyBoard)
-    let bestValue = this.minimax(this.keyBoard, 1, 'max', 'black');
+    let bestValue = this.minimax(this.keyBoard, 0, 'max', 'black', {
+      depth1: null,
+      depth2: null,
+      depth3: null,
+    });
     console.log(bestValue);
-    console.log(this.list_point_depth1);
-    console.log(this.keyBoardDepth1)
+    // console.log(this.list_point_depth1);
+    // console.log(this.keyBoardDepth1)
+    // console.log(this.keyBoardDepth2)
 
-    for (let i = 0; i < this.list_point_depth1.length; i++) {
-      if (this.list_point_depth1[i] == bestValue) {
-        this.keyBoard = this.keyBoardDepth1[i]
+    // for (let i = 0; i < this.keyBoardDepth2.length; i++) {
+    //   if (this.getPoint(this.keyBoardDepth2[i].keyBoard) == bestValue && this.keyBoardDepth2[i].item.depth2 != null) {
+    //     console.log(this.getPoint(this.keyBoardDepth2[i].keyBoard))
+    //     // console.log(this.keyBoardDepth2[i])
+    //     this.keyBoard = this.keyBoardDepth1[this.keyBoardDepth2[i].item.depth2];
+    //   }
+    // }
+
+    // for (let i = 0; i < this.keyBoardDepth2.length; i++) {
+    //   this.keyBoardDepth2[i].item.point = this.getPoint(this.keyBoardDepth2[i].keyBoard)
+    // }
+
+
+    // console.log(this.keyBoardDepth1[21])
+    for (let i = 0; i < this.keyBoardDepth2.length; i++) {
+      // console.log(this.keyBoardDepth2[i].item.point)
+      if (this.keyBoardDepth2[i].item.depth2 != null && this.keyBoardDepth2[i].item.point == bestValue) {
+        // console.log("done")
+        // console.log(this.keyBoardDepth2[i].keyBoard)
+        this.keyBoard = this.keyBoardDepth1[this.keyBoardDepth2[i].item.depth1];
+        // console.log(this.getPoint(this.keyBoardDepth2[i].keyBoard))
       }
     }
 
+    // let array = []
+    // for (let i = 0; i < this.keyBoardDepth2.length; i++) {
+    //   if (this.keyBoardDepth2[i].item.depth1 == 21) {
+    //     array.push(this.keyBoardDepth2[i].keyBoard)
+    //   }
+    // }
+
+    // let index = 0;
+    // setInterval(() => {
+    //   this.keyBoard = array[index++]
+    // }, 2000);
+
     this.keyBoard = this.resetHighlightPosition(this.keyBoard);
+    this.keyBoardBackUp = [...this.keyBoard]
   }
 
   getBestMove() {

@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { ChessNormalComponent } from './chess-normal/chess-normal.component';
 import { ChessMinimaxComponent } from './chess-minimax/chess-minimax.component';
 import { TestComponent } from './test/test.component';
+import { MinimaxComponent } from './minimax/minimax.component';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { TestComponent } from './test/test.component';
     AppComponent,
     ChessNormalComponent,
     ChessMinimaxComponent,
-    TestComponent
+    TestComponent,
+    MinimaxComponent
   ],
   imports: [
     BrowserModule,

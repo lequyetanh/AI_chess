@@ -3,14 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { ChessNormalComponent } from './chess-normal/chess-normal.component';
 import { ChessMinimaxComponent } from './chess-minimax/chess-minimax.component';
 import { TestComponent } from './test/test.component';
+import { MinimaxComponent } from './minimax/minimax.component';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: '/test', pathMatch: 'full'
+    path: '', redirectTo: '/minimax', pathMatch: 'full'
   },
   { path: 'normal', component: ChessNormalComponent },
-  { path: 'minimax', component: ChessMinimaxComponent },
-  { path: 'test', component: TestComponent }
+  { path: 'test', component: TestComponent },
+  { path: 'minimax', component: MinimaxComponent }
 ];
 
 @NgModule({
