@@ -602,7 +602,7 @@ export class TestComponent implements OnInit {
         this.keyBoard[this.chessmanWaiting.position[0]][this.chessmanWaiting.position[1]].chessman = null;
 
         this.keyBoard = this.resetHighlightPosition(this.keyBoard);
-        this.getPoint(this.keyBoard)
+        // this.getPoint(this.keyBoard)
         // console.log(this.keyBoard);
         // this.enemy = this.updateEnemy('black', this.keyBoard);
         // console.log(this.enemy);
@@ -613,11 +613,106 @@ export class TestComponent implements OnInit {
     }
   }
 
+  minimax(keyBoard, depth, maximizingPlayer) {
+    return (this.alphabeta(keyBoard, depth, -10000, 10000, maximizingPlayer));
+  }
+
+  alphabeta(keyBoard, depth, a, b, maximizingPlayer) {
+
+    let movingOn = false;
+    let list_keyBoard_depth_1 = [];
+    this.enemy = Func.updateEnemy('black', this.keyBoard);
+    for (let i = 0; i < this.enemy.length; i++) {
+      if (this.enemy[i].availablePosition[0] != undefined) {
+        movingOn = true;
+        for (let j = 0; j < this.enemy[i].availablePosition.length; j++) {
+          let keyBoardDepth1 = [];
+          // console.log(this.enemy[i].availablePosition[])
+          // console.log([...this.keyBoard]);
+          keyBoardDepth1 = [...this.enemyMoveEmulator(this.enemy[i].position, this.enemy[i].availablePosition[j].position, this.enemy[i], [...this.keyBoard])];
+          // console.log(keyBoardDepth1)
+          keyBoardDepth1 = this.resetHighlightPosition([...keyBoardDepth1]);
+          // console.log(keyBoardDepth1)
+          list_keyBoard_depth_1.push(keyBoardDepth1);
+
+          // console.log(this.keyBoard);
+          // console.log(this.keyBoard);
+
+          // console.log(list_keyBoard_depth_1);
+          // console.log(this.enemy[i].availablePosition[j].position)
+          // console.log(list_keyBoard_depth_1);
+          // if (j == 0) {
+          //   break;
+          // }
+        }
+        // break
+      }
+    }
+
+    if (depth == 1) {
+      this.keyBoardDepth1 = [...list_keyBoard_depth_1];
+      for (let m = 0; m < list_keyBoard_depth_1.length; m++) {
+        this.list_point_depth1.push(this.getPoint(list_keyBoard_depth_1[m]));
+      }
+    }
+
+    // console.log(keyBoard, a, b, maximizingPlayer);
+    if (movingOn == false || depth == 0) {
+      //   console.log(depth)
+      //   console.log('keyBoard: ' + keyBoard);
+      return this.getPoint(keyBoard);
+    }
+    if (maximizingPlayer == 'max') {
+
+      for (let i = 0; i < list_keyBoard_depth_1.length; i++) {
+        a = Math.max(a, this.alphabeta(list_keyBoard_depth_1[i], depth - 1, a, b, 'min'));
+        // console.log(keyBoard);
+        // console.log('a: cho goi ham max' + '-----------' + a);
+        if (a >= b) {
+          // console.log('a: ' + a);
+          // console.log('b: ' + b);
+
+          break;
+        }
+      }
+      return a;
+    } else {
+      for (let i = 0; i < list_keyBoard_depth_1.length; i++) {
+        b = Math.min(b, this.alphabeta(list_keyBoard_depth_1[i], depth - 1, a, b, 'max'));
+        // console.log(keyBoard);
+        // console.log('b: cho goi ham min' + '--------' + b);
+        if (a >= b) {
+          // console.log('a: ' + a);
+          // console.log('b: ' + b);
+          break;
+        }
+      }
+      return b;
+    }
+  }
+
   enemyMove() {
-    this.getBestMove();
-    // this.keyBoardDepth2 = [];
-    // this.keyBoardDepth3 = [];
+    // this.getBestMove();
+    this.keyBoardDepth1 = [];
+    this.keyBoardDepth2 = [];
+    this.keyBoardDepth3 = [];
+
+    this.list_point_depth1 = [];
+    this.list_point_depth2 = [];
+    this.list_point_depth3 = [];
     // console.log(this.keyBoard)
+    let bestValue = this.minimax(this.keyBoard, 1, 'max');
+    console.log(bestValue);
+    console.log(this.list_point_depth1);
+    console.log(this.keyBoardDepth1)
+
+    for (let i = 0; i < this.list_point_depth1.length; i++) {
+      if (this.list_point_depth1[i] == bestValue) {
+        this.keyBoard = this.keyBoardDepth1[i]
+      }
+    }
+
+    this.keyBoard = this.resetHighlightPosition(this.keyBoard);
   }
 
   getBestMove() {
@@ -633,25 +728,25 @@ export class TestComponent implements OnInit {
           let keyBoardDepth1 = [];
           // console.log(this.enemy[i].availablePosition[])
           // console.log([...this.keyBoardBackUp]);
-          keyBoardDepth1 = this.enemyMoveEmulator(this.enemy[i].position, this.enemy[i].availablePosition[j].position, this.enemy[i], [...this.keyBoardBackUp]);
+          keyBoardDepth1 = [...this.enemyMoveEmulator(this.enemy[i].position, this.enemy[i].availablePosition[j].position, this.enemy[i], [...this.keyBoardBackUp])];
           console.log("===================================================")
           // console.log(keyBoardDepth1)
-          // keyBoardDepth1 = this.resetHighlightPosition([...keyBoardDepth1]);
+          keyBoardDepth1 = this.resetHighlightPosition([...keyBoardDepth1]);
           // console.log(keyBoardDepth1)
           this.keyBoardDepth1.push(keyBoardDepth1);
           keyBoardBestValue.push(keyBoardDepth1);
 
-          console.log(this.keyBoard);
-          console.log(this.keyBoardBackUp);
+          // console.log(this.keyBoard);
+          // console.log(this.keyBoardBackUp);
 
           // console.log(this.keyBoardDepth1);
           // console.log(this.enemy[i].availablePosition[j].position)
           // console.log(list_point_depth_1);
-          if (j == 0) {
-            break;
-          }
+          // if (j == 0) {
+          //   break;
+          // }
         }
-        break
+        // break
       }
     }
 
@@ -659,12 +754,18 @@ export class TestComponent implements OnInit {
     // // console.log(keyBoardBestValue[1]);
     // // console.log(this.keyBoardDepth1);
     // // console.log(keyBoardBestValue);
-    // for (let m = 0; m < keyBoardBestValue.length; m++) {
-    //   list_point_depth_1.push(this.getPoint(keyBoardBestValue[m]));
-    // }
+    for (let m = 0; m < keyBoardBestValue.length; m++) {
+      list_point_depth_1.push(this.getPoint(keyBoardBestValue[m]));
+      // if (m == 33) {
+      //   console.log(keyBoardBestValue[m]);
+      // }
+    }
+
+    // console.log(this.keyBoard);
+    // console.log(this.keyBoardBackUp);
 
     // // console.log(this.keyBoardDepth1[35]);
-    // console.log(list_point_depth_1);
+    console.log(list_point_depth_1);
     // // this.resetHighlightPosition(this.keyBoardBackUp);
     // // this.updateEnemy('white', this.keyBoardBackUp);
     // // console.log(this.enemy);
@@ -674,8 +775,8 @@ export class TestComponent implements OnInit {
     // console.log([endPosition[0]],[endPosition[1]]);
     // console.log(keyBoard[start][end])
 
-    console.log(startPosition)
-    console.log(endPosition)
+    // console.log(startPosition)
+    // console.log(endPosition)
     let keyBoardLocal = [];
     // console.log(keyBoardLocal)
 
@@ -683,22 +784,36 @@ export class TestComponent implements OnInit {
       let row = [];
       for (let j = 0; j < 8; j++) {
         if (i == endPosition[0] && j == endPosition[1]) {
-          keyBoardLocal[i][j].highlightPosition = 'normal';
-          keyBoardLocal[i][j].status = 'occupy';
-          keyBoardLocal[i][j].chessman = {
-            color: chessman.color,
-            idChessman: chessman.idChessman,
-            nameChessman: chessman.nameChessman,
-            move: true,
-            image: chessman.image,
-            point: chessman.point,
-            availablePosition: [],
-          };
-          if (i == startPosition[0] && j == startPosition[1]) {
-            keyBoardLocal[i][j].highlightPosition = 'normal';
-            keyBoardLocal[i][j].status = 'blank';
-            keyBoardLocal[i][j].chessman = null;
-          }
+          row.push({
+            idKeyBoard: keyBoardInput[i][j].idKeyBoard,
+            position: endPosition,
+            highlightPosition: 'normal',
+            status: 'occupy',
+            chessman: {
+              color: chessman.color,
+              idChessman: chessman.idChessman,
+              nameChessman: chessman.nameChessman,
+              move: true,
+              image: chessman.image,
+              point: chessman.point,
+              availablePosition: [],
+            }
+          });
+          continue;
+        }
+
+        if (i == startPosition[0] && j == startPosition[1]) {
+          row.push({
+            idKeyBoard: keyBoardInput[i][j].idKeyBoard,
+            position: startPosition,
+            highlightPosition: 'normal',
+            status: 'blank',
+            chessman: null
+          });
+          continue;
+        }
+        else {
+          row.push(keyBoardInput[i][j]);
         }
       }
       keyBoardLocal.push(row);
