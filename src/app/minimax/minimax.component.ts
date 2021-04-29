@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as Var from './../common/variable';
 import * as Func from './../common/function';
+import { MyserviceService } from './../myservice.service';
 
 @Component({
   selector: 'app-minimax',
@@ -36,7 +37,9 @@ export class MinimaxComponent implements OnInit {
   list_point_depth3 = [];
 
 
-  constructor() {
+  constructor(
+    public chessService: MyserviceService
+  ) {
     this.keyBoard = [...Var.keyBoard];
     // console.log(this.keyBoard);
     // Var.keyBoard.pop();
@@ -46,11 +49,13 @@ export class MinimaxComponent implements OnInit {
   ngOnInit() {
     this.keyBoard = this.resetHighlightPosition([...this.keyBoard]);
     // console.log(this.keyBoard)
-    this.getPoint(this.keyBoard);
-    this.keyBoardBackUp = [...this.keyBoard];
+    // this.getPoint(this.keyBoard);
+    this.chessService.keyBoard = [...this.keyBoard];
+    this.chessService.keyBoardBackUp = [...this.keyBoard]
   }
 
   resetHighlightPosition(keyBoard) {
+    // console.log(keyBoard)
     let keyBoardLocal = [...keyBoard];
 
     for (let i = 0; i < 8; i++) {
@@ -615,10 +620,17 @@ export class MinimaxComponent implements OnInit {
         this.keyBoard[this.chessmanWaiting.position[0]][this.chessmanWaiting.position[1]].chessman = null;
 
         this.keyBoard = this.resetHighlightPosition(this.keyBoard);
+        console.log("====================================Enemy==========================================")
+        this.chessService.keyBoard = [...this.keyBoard];
+        this.chessService.keyBoardBackUp = [...this.keyBoard]
         // this.getPoint(this.keyBoard)
         // console.log(this.keyBoard);
         // this.enemy = this.updateEnemy('black', this.keyBoard);
         // console.log(this.getPoint(this.keyBoard));
+
+        // console.log(this.chessService.keyBoard);
+        // console.log(this.chessService.keyBoardBackUp);
+
         setTimeout(() => {
           this.enemyMove();
         }, 0)
@@ -637,6 +649,8 @@ export class MinimaxComponent implements OnInit {
     let index = 0;
     let enemy = [];
 
+    // keyBoard = this.resetHighlightPosition([...keyBoard]);
+
     // console.log(item_father)
 
     enemy = Func.updateEnemy(color, keyBoard);
@@ -648,17 +662,8 @@ export class MinimaxComponent implements OnInit {
       }
     }
 
-    // if (depth == 1) {
-    //   this.keyBoardDepth1 = [...list_keyBoard_depth_1];
-    //   for (let m = 0; m < list_keyBoard_depth_1.length; m++) {
-    //     this.list_point_depth1.push(this.getPoint(list_keyBoard_depth_1[m]));
-    //   }
-    // }
-
     // console.log(keyBoard, a, b, maximizingPlayer);
-    if (movingOn == false || depth == 2) {
-      if (item_father.depth1) {
-      }
+    if (movingOn == false || depth == 1) {
       //   console.log(depth)
       //   console.log('keyBoard: ' + keyBoard);
       // console.log(this.getPoint(keyBoard))
@@ -668,7 +673,10 @@ export class MinimaxComponent implements OnInit {
 
     if (maximizingPlayer == 'max') {
 
+      // console.log(enemy)
       for (let i = 0; i < enemy.length; i++) {
+        // console.log(keyBoard);
+        // console.log(enemy)
         if (case_alpha_beta) {
           break;
         } else {
@@ -682,9 +690,15 @@ export class MinimaxComponent implements OnInit {
                 depth3: null,
                 point: null,
               };
-              keyBoardValue = [...this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], [...this.keyBoard])];
-              // console.log(keyBoardDepth1)
-              keyBoardValue = this.resetHighlightPosition([...keyBoardValue]);
+              // console.log("=======================================Keyboard Value==================================")
+              keyBoardValue = [...this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], keyBoard)];
+              // if (index == 0) {
+              // console.log(keyBoardValue)
+              // }
+              // keyBoardValue = [...this.resetHighlightPosition(keyBoardValue)];
+              // if (index == 0) {
+              // console.log(keyBoardValue)
+              // }
               // console.log(keyBoardValue)
               item.depth1 = item_father.depth1;
               item.depth2 = item_father.depth2;
@@ -693,29 +707,29 @@ export class MinimaxComponent implements OnInit {
 
               if (depth == 0) {
                 item.depth1 = index;
-                this.keyBoardDepth1.push(keyBoardValue);
+                this.keyBoardDepth1.push([...keyBoardValue]);
               }
 
-              if (depth == 1) {
-                item.depth2 = index;
-                // this.keyBoardDepth2.length == this.keyBoardDepth1.length;
-                // this.keyBoardDepth2[item.depth1].push(keyBoardValue);
-              }
-
-              if (depth == 2) {
-                item.depth3 = index;
-                this.keyBoardDepth3.push({
-                  item: item,
-                  keyBoard: keyBoardValue
-                })
-              }
-              index++;
+              // console.log(this.keyBoardDepth1)
+              // if (depth == 2) {
+              //   item.depth3 = index;
+              //   this.keyBoardDepth3.push({
+              //     item: item,
+              //     keyBoard: keyBoardValue
+              //   })
+              // }
 
               a = Math.max(a, this.alphabeta(keyBoardValue, depth + 1, a, b, 'min', 'white', item));
+
+              index++;
               if (a >= b) {
                 case_alpha_beta = true;
                 break;
               }
+              // if (index == 2) {
+              //   case_alpha_beta = true;
+              //   break;
+              // }
             }
           }
         }
@@ -723,8 +737,8 @@ export class MinimaxComponent implements OnInit {
       return a;
     } else {
       // if (item_father.depth1 == 21) {
-      //   console.log(keyBoard)
-      //   console.log(enemy)
+      // console.log(keyBoard)
+      // console.log(enemy)
       // }
       // console.log("min")
       // console.log(enemy)
@@ -741,20 +755,16 @@ export class MinimaxComponent implements OnInit {
                 depth2: null,
                 depth3: null,
                 point: null,
-              }; 6
-              keyBoardValue = [...this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], [...keyBoard])];
+              };
+              keyBoardValue = this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], keyBoard);
               // console.log(keyBoardDepth1)
-              keyBoardValue = this.resetHighlightPosition([...keyBoardValue]);
+              keyBoardValue = this.resetHighlightPosition(keyBoardValue);
               // console.log(keyBoardValue)
               item.depth1 = item_father.depth1;
               item.depth2 = item_father.depth2;
               item.depth3 = item_father.depth3;
               item.point = this.getPoint(keyBoardValue);
               // console.log(item)
-              if (depth == 0) {
-                item.depth1 = index;
-                // this.keyBoardDepth1.push(keyBoardValue);
-              }
 
               if (depth == 1) {
                 item.depth2 = index;
@@ -765,14 +775,8 @@ export class MinimaxComponent implements OnInit {
                 })
               }
 
-              if (depth == 2) {
-                item.depth3 = index;
-                // this.keyBoardDepth3.length == this.keyBoardDepth1.length;
-                // this.keyBoardDepth3[item.depth1].length == this.keyBoardDepth2.length;
-                // this.keyBoardDepth3[item.depth1][item.depth2].push(keyBoardValue);
-              }
-              index++
               b = Math.min(b, this.alphabeta(keyBoardValue, depth + 1, a, b, 'max', 'black', item));
+              index++;
               if (a >= b) {
                 case_alpha_beta = true;
                 break;
@@ -785,109 +789,6 @@ export class MinimaxComponent implements OnInit {
     }
   }
 
-  alphabeta2(keyBoard, depth, a, b, maximizingPlayer, color, item_father) {
-
-    let case_alpha_beta = false;
-    let movingOn = false;
-    let index = 0;
-
-    if (depth == 0) {
-      //   console.log(depth)
-      //   console.log('keyBoard: ' + keyBoard);
-      console.log(this.getPoint(keyBoard))
-      return this.getPoint(keyBoard);
-    }
-
-    this.enemy = Func.updateEnemy(color, this.keyBoard);
-    // console.log(this.enemy)
-    for (let i = 0; i < this.enemy.length; i++) {
-      if (case_alpha_beta == true) {
-        break;
-      } else {
-        if (this.enemy[i].availablePosition[0] != undefined) {
-          movingOn = true;
-          for (let j = 0; j < this.enemy[i].availablePosition.length; j++) {
-            let keyBoardValue = [];
-            let item = {
-              depth1: null,
-              depth2: null,
-              depth3: null,
-            };
-            // console.log(this.enemy[i].availablePosition[])
-            // console.log([...this.keyBoard]);
-            keyBoardValue = [...this.enemyMoveEmulator(this.enemy[i].position, this.enemy[i].availablePosition[j].position, this.enemy[i], [...this.keyBoard])];
-            // console.log(keyBoardDepth1)
-            keyBoardValue = this.resetHighlightPosition([...keyBoardValue]);
-            // console.log(keyBoardValue)
-            // console.log(this.getPoint(keyBoardValue));
-            if (maximizingPlayer == 'max') {
-              // item = item_father;
-              // if (depth == 1) {
-              //   item.depth1 = index;
-              //   index++;
-              //   this.keyBoardDepth1.push(keyBoardValue);
-              // }
-
-              // if (depth == 2) {
-              //   item.depth2 = index;
-              //   index++;
-              //   this.keyBoardDepth2.length == this.keyBoardDepth1.length;
-              //   this.keyBoardDepth2[item.depth1].push(keyBoardValue);
-              // }
-
-              // if (depth == 3) {
-              //   item.depth3 = index;
-              //   index++;
-              //   this.keyBoardDepth3.length == this.keyBoardDepth1.length;
-              //   this.keyBoardDepth3[item.depth1].length == this.keyBoardDepth2.length;
-              //   this.keyBoardDepth3[item.depth1][item.depth2].push(keyBoardValue);
-              // }
-
-              a = Math.max(a, this.alphabeta(keyBoardValue, depth - 1, a, b, 'min', 'white', item));
-              // console.log(keyBoard);
-              // console.log('a: cho goi ham max' + '-----------' + a);
-              if (a >= b) {
-                case_alpha_beta = true;
-                break;
-              }
-              return a;
-            } else {
-
-              b = Math.min(b, this.alphabeta(keyBoardValue, depth - 1, a, b, 'max', 'black', item));
-              // console.log(keyBoard);
-              // console.log('b: cho goi ham min' + '--------' + b);
-              if (a >= b) {
-                case_alpha_beta = true;
-                break;
-              }
-              return b;
-            }
-
-            // console.log(keyBoardDepth1)
-
-            // console.log(this.keyBoard);
-            // console.log(this.keyBoard);
-
-            // console.log(list_keyBoard_depth_1);
-            // console.log(this.enemy[i].availablePosition[j].position)
-            // console.log(list_keyBoard_depth_1);
-            // if (j == 0) {
-            //   break;
-            // }
-          }
-          // break
-        }
-      }
-    }
-
-    // console.log(keyBoard, a, b, maximizingPlayer);
-    if (movingOn == false) {
-      //   console.log(depth)
-      //   console.log('keyBoard: ' + keyBoard);
-      return this.getPoint(keyBoard);
-    }
-  }
-
   enemyMove() {
     // this.getBestMove();
     this.keyBoardDepth1 = [];
@@ -895,17 +796,17 @@ export class MinimaxComponent implements OnInit {
     this.keyBoardDepth3 = [];
 
     this.list_point_depth1 = [];
-    this.list_point_depth2 = [[]];
-    this.list_point_depth3 = [[[]]];
+    this.list_point_depth2 = [];
+    this.list_point_depth3 = [];
     // console.log(this.keyBoard)
-    let bestValue = this.minimax(this.keyBoard, 0, 'max', 'black', {
+    let bestValue = this.minimax([...this.keyBoard], 0, 'max', 'black', {
       depth1: null,
       depth2: null,
       depth3: null,
     });
     console.log(bestValue);
     // console.log(this.list_point_depth1);
-    // console.log(this.keyBoardDepth1)
+    console.log(this.keyBoardDepth1)
     // console.log(this.keyBoardDepth2)
 
     // for (let i = 0; i < this.keyBoardDepth2.length; i++) {
@@ -916,25 +817,51 @@ export class MinimaxComponent implements OnInit {
     //   }
     // }
 
-    // for (let i = 0; i < this.keyBoardDepth2.length; i++) {
-    //   this.keyBoardDepth2[i].item.point = this.getPoint(this.keyBoardDepth2[i].keyBoard)
+
+    let array = []
+    // =========================================================depth1========================
+    // for (let i = 0; i < this.keyBoardDepth1.length; i++) {
+    //   // console.log(this.keyBoardDepth1[i])
+    //   array.push(this.keyBoardDepth1[i])
+    //   // console.log(this.getPoint(this.keyBoardDepth1[i]))
+    //   if (this.getPoint(this.keyBoardDepth1[i]) == bestValue) {
+    //     // console.log(i)
+    //     this.keyBoard = this.keyBoardDepth1[i]
+    //   }
     // }
 
 
-    // console.log(this.keyBoardDepth1[21])
-    for (let i = 0; i < this.keyBoardDepth2.length; i++) {
-      // console.log(this.keyBoardDepth2[i].item.point)
-      if (this.keyBoardDepth2[i].item.depth2 != null && this.keyBoardDepth2[i].item.point == bestValue) {
-        // console.log("done")
-        // console.log(this.keyBoardDepth2[i].keyBoard)
-        this.keyBoard = this.keyBoardDepth1[this.keyBoardDepth2[i].item.depth1];
-        // console.log(this.getPoint(this.keyBoardDepth2[i].keyBoard))
-      }
-    }
+    // console.log(this.keyBoardDepth1[30])
+    // this.keyBoard = this.keyBoardDepth1[30]
+    // =========================================================depth2========================
+
+    // for (let i = 0; i < this.keyBoardDepth2.length; i++) {
+    //   // console.log(this.keyBoardDepth2[i].item.point)
+    //   if (this.keyBoardDepth2[i].item.depth2 != null && this.keyBoardDepth2[i].item.point == bestValue) {
+    //     // console.log("done")
+    //     // array.push(this.keyBoardDepth2[i].keyBoard)
+    //     // console.log(this.keyBoardDepth2[i].keyBoard)
+    //     // console.log(this.keyBoardDepth2[i].item)
+    //     this.keyBoard = this.keyBoardDepth1[this.keyBoardDepth2[i].item.depth1];
+    //     // break;
+    //     // console.log(this.getPoint(this.keyBoardDepth2[i].keyBoard))
+    //   }
+    // }
+
+    // =========================================================depth3========================
+    // for (let i = 0; i < this.keyBoardDepth3.length; i++) {
+    //   // console.log(this.keyBoardDepth2[i].item.point)
+    //   if (this.keyBoardDepth3[i].item.depth3 != null && this.keyBoardDepth3[i].item.point == bestValue) {
+    //     // console.log("done")
+    //     // console.log(this.keyBoardDepth3[i].keyBoard)
+    //     this.keyBoard = this.keyBoardDepth1[this.keyBoardDepth3[i].item.depth1];
+    //     // console.log(this.getPoint(this.keyBoardDepth3[i].keyBoard))
+    //   }
+    // }
 
     // let array = []
     // for (let i = 0; i < this.keyBoardDepth2.length; i++) {
-    //   if (this.keyBoardDepth2[i].item.depth1 == 21) {
+    //   if (this.keyBoardDepth2[i].item.depth1 == 12) {
     //     array.push(this.keyBoardDepth2[i].keyBoard)
     //   }
     // }
@@ -942,10 +869,10 @@ export class MinimaxComponent implements OnInit {
     // let index = 0;
     // setInterval(() => {
     //   this.keyBoard = array[index++]
-    // }, 2000);
+    // }, 1000);
 
-    this.keyBoard = this.resetHighlightPosition(this.keyBoard);
-    this.keyBoardBackUp = [...this.keyBoard]
+    // console.log(this.keyBoard)
+    // this.keyBoard = this.resetHighlightPosition(this.keyBoard);
   }
 
   getBestMove() {
@@ -1046,12 +973,16 @@ export class MinimaxComponent implements OnInit {
           continue;
         }
         else {
-          row.push(keyBoardInput[i][j]);
+          let newObject = keyBoardInput[i][j];
+          if (newObject.status == 'occupy') {
+            newObject.chessman.availablePosition = [];
+          }
+          row.push(newObject);
         }
       }
       keyBoardLocal.push(row);
     }
-    // keyBoardLocal = this.resetHighlightPosition(keyBoardLocal);
+    // keyBoardLocal = this.resetHighlightPosition([...keyBoardLocal]);
 
     // console.log("--------", keyBoardLocal)
     return keyBoardLocal;
@@ -1059,3 +990,6 @@ export class MinimaxComponent implements OnInit {
 
 
 }
+
+
+// đang có lỗi là sau khi máy tính toán nước đi nhưng mà highlightposition của keyBoard lại bị thay đổi và ko biết fix

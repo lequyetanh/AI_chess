@@ -621,7 +621,7 @@ export class TestComponent implements OnInit {
 
     let movingOn = false;
     let list_keyBoard_depth_1 = [];
-    let enemy = Func.updateEnemy(color, this.keyBoard);
+    let enemy = Func.updateEnemy(color, keyBoard);
     for (let i = 0; i < enemy.length; i++) {
       if (enemy[i].availablePosition[0] != undefined) {
         movingOn = true;
@@ -629,7 +629,7 @@ export class TestComponent implements OnInit {
           let keyBoardDepth1 = [];
           // console.log(enemy[i].availablePosition[])
           // console.log([...this.keyBoard]);
-          keyBoardDepth1 = [...this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], [...this.keyBoard])];
+          keyBoardDepth1 = [...this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], [...keyBoard])];
           // console.log(keyBoardDepth1)
           keyBoardDepth1 = this.resetHighlightPosition([...keyBoardDepth1]);
           // console.log(keyBoardDepth1)
@@ -712,7 +712,7 @@ export class TestComponent implements OnInit {
       }
     }
 
-    this.keyBoard = this.resetHighlightPosition(this.keyBoard);
+    // this.keyBoard = this.resetHighlightPosition(this.keyBoard);
   }
 
   getBestMove() {

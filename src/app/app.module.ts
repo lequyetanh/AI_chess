@@ -7,6 +7,7 @@ import { ChessNormalComponent } from './chess-normal/chess-normal.component';
 import { ChessMinimaxComponent } from './chess-minimax/chess-minimax.component';
 import { TestComponent } from './test/test.component';
 import { MinimaxComponent } from './minimax/minimax.component';
+import { BruceForceComponent } from './bruce-force/bruce-force.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { MinimaxComponent } from './minimax/minimax.component';
     ChessNormalComponent,
     ChessMinimaxComponent,
     TestComponent,
-    MinimaxComponent
+    MinimaxComponent,
+    BruceForceComponent
   ],
   imports: [
     BrowserModule,
