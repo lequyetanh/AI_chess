@@ -183,7 +183,7 @@ export class BruceForceComponent implements OnInit {
         break;
       }
     }
-    console.log(this.keyBoardDepth3)
+    // console.log(this.keyBoardDepth3)
 
     for (let i = 0; i < this.keyBoardDepth1.length; i++) {
       let row = [];
@@ -198,12 +198,12 @@ export class BruceForceComponent implements OnInit {
 
     for (let i = 0; i < this.list_point_depth3.length; i++) {
       listMin.push(Math.min.apply(Math, this.list_point_depth3[i]))
-      // console.log(Math.min.apply(Math, this.list_point_depth3[i]))
     }
+    console.log(listMin)
     bestValue = Math.max.apply(Math, listMin)
     // console.log(listMin.indexOf(bestValue))
     // console.log(this.keyBoardDepth1[listMin.indexOf(bestValue)])
-    this.keyBoard = this.keyBoardDepth1[listMin.indexOf(bestValue)]
+    this.keyBoard = this.keyBoardDepth1[listMin.lastIndexOf(bestValue)]
     // ================================================endDepth3=================================
 
     this.keyBoard = Func.resetHighlightPosition(this.keyBoardDepth1[listMin.indexOf(bestValue)]);

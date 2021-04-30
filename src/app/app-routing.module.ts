@@ -8,7 +8,7 @@ import { BruceForceComponent } from './bruce-force/bruce-force.component';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: '/bruce-force', pathMatch: 'full'
+    path: '', redirectTo: '/minimax', pathMatch: 'full'
   },
   { path: 'normal', component: ChessNormalComponent },
   { path: 'test', component: TestComponent },
