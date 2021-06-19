@@ -299,6 +299,50 @@ export class BruceForceComponent implements OnInit {
     this.keyBoardDepth3.push(bestValue)
   }
 
+  getKeyBoardDepth4(keyBoard, indexDepth3, indexDepth2, indexDepth1) {
+    //======================================độ sâu cấp 3======================================
+    // console.log(keyBoard)
+    let maxPoint = 10000;
+    let enemy;
+    let keyBoardLocal = Func.resetHighlightPosition(keyBoard);
+    let bestValue = {};
+
+    enemy = Func.updateEnemy('white', keyBoardLocal);
+    // console.log(enemy)
+    for (let i = 0; i < enemy.length; i++) {
+      // console.log(keyBoard);
+      // console.log(enemy)
+      if (enemy[i].availablePosition[0] != undefined) {
+        for (let j = 0; j < enemy[i].availablePosition.length; j++) {
+          let keyBoardValue = [];
+          let object = {
+            depth1: null,
+            depth2: null,
+            depth3: null,
+            keyBoard: null,
+            point: null,
+          }
+          // console.log("=======================================Keyboard Value==================================")
+          keyBoardValue = [...this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], [...keyBoardLocal])];
+          object = {
+            depth1: indexDepth1,
+            depth2: indexDepth2,
+            depth3: indexDepth3,
+            keyBoard: keyBoardValue,
+            point: Func.getPoint(keyBoardValue)
+          }
+
+          if (object.point < maxPoint) {
+            bestValue = object;
+            maxPoint = object.point
+          }
+        }
+      }
+    }
+
+    // this.keyBoardDepth.push(bestValue)
+  }
+
   enemyMoveEmulator(startPosition, endPosition, chessman, keyBoardInput) {
     // console.log([endPosition[0]],[endPosition[1]]);
     // console.log(keyBoard[start][end])

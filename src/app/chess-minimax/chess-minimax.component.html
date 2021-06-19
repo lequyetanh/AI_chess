@@ -1,17 +1,30 @@
+<div class="spinner" *ngIf="thinking">
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
+<div class="time_thinking">
+  <div class="">
+    <p>Thời gian suy nghĩ:</p>
+    <p> {{time_thinking}} (ms)</p>
+  </div>
+</div>
+
+
 <div class="contain flexbox-center-center">
   <div class="board flexbox-start-start">
-      <div class='list-chessman flexbox-start-start' *ngFor="let eachKeyBoard of keyBoard">
-          <div class="chessman" *ngFor="let eachKeyBoard of eachKeyBoard"
-          [class.highlight-bad]="eachKeyBoard.highlightPosition == 'enemy'"
-          [class.highlight-good]="eachKeyBoard.highlightPosition == 'ally'"
-          (click)="moveChessman(eachKeyBoard)"
-          >
-              <div class="position">[{{eachKeyBoard.position[0]}},{{eachKeyBoard.position[1]}}]</div>
-              <div class="stt">{{eachKeyBoard.idKeyBoard}}</div>
-              <div class="wrapp" *ngIf="eachKeyBoard.status == 'occupy'">
-                  <img src="./../assets/chess/v_1/{{eachKeyBoard.chessman.image}}" />
-              </div>
-          </div>
+    <div class='list-chessman flexbox-start-start' *ngFor="let eachKeyBoard of keyBoard">
+      <div class="chessman" *ngFor="let eachKeyBoard of eachKeyBoard; let i = index"
+        [class.highlight-bad]="eachKeyBoard.highlightPosition == 'enemy'"
+        [class.highlight-good]="eachKeyBoard.highlightPosition == 'ally'" (click)="moveChessman(eachKeyBoard)">
+
+        <div class="position">[{{eachKeyBoard.position[0]}},{{eachKeyBoard.position[1]}}]</div>
+        <div class="stt">{{eachKeyBoard.idKeyBoard}}</div>
+        <div class="wrapp" *ngIf="eachKeyBoard.status == 'occupy'">
+          <img src="./../assets/chess/v_1/{{eachKeyBoard.chessman.image}}" />
+        </div>
       </div>
+    </div>
   </div>
 </div>

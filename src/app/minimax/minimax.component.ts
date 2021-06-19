@@ -38,10 +38,9 @@ export class MinimaxComponent implements OnInit {
 
 
   constructor(
-    public chessService: MyserviceService
   ) {
     this.keyBoard = [...Var.keyBoard];
-    // console.log(this.keyBoard);
+    console.log(this.keyBoard);
     // Var.keyBoard.pop();
     // console.log(this.keyBoard)
   }
@@ -50,8 +49,6 @@ export class MinimaxComponent implements OnInit {
     this.keyBoard = Func.resetHighlightPosition([...this.keyBoard]);
     // console.log(this.keyBoard)
     // this.getPoint(this.keyBoard);
-    this.chessService.keyBoard = [...this.keyBoard];
-    this.chessService.keyBoardBackUp = [...this.keyBoard]
   }
 
   moveChessman(eachKeyboard) {
@@ -115,15 +112,11 @@ export class MinimaxComponent implements OnInit {
 
         this.keyBoard = Func.resetHighlightPosition(this.keyBoard);
         console.log("====================================Enemy==========================================")
-        this.chessService.keyBoard = [...this.keyBoard];
-        this.chessService.keyBoardBackUp = [...this.keyBoard]
         // this.getPoint(this.keyBoard)
         // console.log(this.keyBoard);
         // this.enemy = this.updateEnemy('black', this.keyBoard);
         // console.log(this.getPoint(this.keyBoard));
 
-        // console.log(this.chessService.keyBoard);
-        // console.log(this.chessService.keyBoardBackUp);
 
         setTimeout(() => {
           this.enemyMove();
@@ -149,7 +142,7 @@ export class MinimaxComponent implements OnInit {
     });
     console.log(bestValue);
     // console.log(this.list_point_depth1);
-    console.log(this.keyBoardDepth1)
+    // console.log(this.keyBoardDepth1)
     // console.log(this.keyBoardDepth2)
 
   }
@@ -164,29 +157,39 @@ export class MinimaxComponent implements OnInit {
     let case_alpha_beta = false;
     let index = 0;
     let enemy = [];
+    let keyBoardLocal = [];
 
-    let keyBoardLocal = Func.resetHighlightPosition(keyBoard);
+
+    for (let h = 0; h < 8; h++) {
+      let row = []
+      for (let k = 0; k < 8; k++) {
+        row.push(keyBoard[h][k])
+      }
+      keyBoardLocal.push(row);
+    }
+
+    keyBoardLocal = Func.resetHighlightPosition([...keyBoardLocal]);
+
+    // console.log(keyBoard, a, b, maximizingPlayer);
+    if (depth == 1) {
+      //   console.log(depth)
+      //   console.log('keyBoard: ' + keyBoard);
+      // console.log(this.getPoint(keyBoard))
+      // this.list_point_depth1.push(this.getPoint(keyBoard));
+      return Func.getPoint(keyBoard);
+    }
 
     // keyBoard = this.resetHighlightPosition([...keyBoard]);
 
     // console.log(item_father)
 
-    enemy = Func.updateEnemy(color, keyBoardLocal);
+    enemy = Func.updateEnemy(color, [...keyBoardLocal]);
     // console.log(enemy)
     for (let i = 0; i < enemy.length; i++) {
       if (enemy[i].availablePosition[0] != undefined) {
         movingOn = true;
         break;
       }
-    }
-
-    // console.log(keyBoard, a, b, maximizingPlayer);
-    if (movingOn == false || depth == 1) {
-      //   console.log(depth)
-      //   console.log('keyBoard: ' + keyBoard);
-      // console.log(this.getPoint(keyBoard))
-      // this.list_point_depth1.push(this.getPoint(keyBoard));
-      return Func.getPoint(keyBoard);
     }
 
     if (maximizingPlayer == 'max') {
@@ -211,10 +214,11 @@ export class MinimaxComponent implements OnInit {
               // console.log("=======================================Keyboard Value==================================")
               keyBoardValue = [...this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], [...keyBoardLocal])];
 
+
               item.depth1 = item_father.depth1;
               item.depth2 = item_father.depth2;
               item.depth3 = item_father.depth3;
-              item.point = Func.getPoint(keyBoardValue);
+              item.point = Func.getPoint([...keyBoardValue]);
 
               if (depth == 0) {
                 item.depth1 = index;
@@ -222,8 +226,8 @@ export class MinimaxComponent implements OnInit {
                   depth1: index,
                   depth2: null,
                   depth3: null,
-                  point: Func.getPoint(keyBoardValue),
-                  keyBoard: keyBoardValue
+                  point: item.point,
+                  keyBoard: [...keyBoardValue]
                 });
               }
 
@@ -236,7 +240,7 @@ export class MinimaxComponent implements OnInit {
               //   })
               // }
 
-              a = Math.max(a, this.alphabeta(keyBoardValue, depth + 1, a, b, 'min', 'white', item));
+              a = Math.max(a, this.alphabeta([...keyBoardValue], depth + 1, a, b, 'min', 'white', item));
 
               index++;
               if (a >= b) {
@@ -273,11 +277,11 @@ export class MinimaxComponent implements OnInit {
                 depth3: null,
                 point: null,
               };
-              keyBoardValue = this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], keyBoard);
+              keyBoardValue = this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], [...keyBoardLocal]);
               // console.log(keyBoardDepth1)
               // console.log(keyBoardValue)
               item.depth1 = item_father.depth1;
-              item.depth2 = item_father.depth2;
+              item.depth2 = index;
               item.depth3 = item_father.depth3;
               item.point = Func.getPoint(keyBoardValue);
               // console.log(item)
@@ -286,12 +290,15 @@ export class MinimaxComponent implements OnInit {
                 item.depth2 = index;
                 // item.point = this.getPoint()
                 this.keyBoardDepth2.push({
-                  item: item,
+                  depth1: item.depth1,
+                  depth2: item.depth2,
+                  depth3: null,
+                  point: Func.getPoint(keyBoardValue),
                   keyBoard: keyBoardValue
                 })
               }
 
-              b = Math.min(b, this.alphabeta(keyBoardValue, depth + 1, a, b, 'max', 'black', item));
+              b = Math.min(b, this.alphabeta([...keyBoardValue], depth + 1, a, b, 'max', 'black', item));
               index++;
               if (a >= b) {
                 case_alpha_beta = true;

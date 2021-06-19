@@ -156,10 +156,20 @@ export function updateEnemy(color, keyBoard) {
   return enemy;
 }
 
-export function getAvailablePosition(currentPosition, nameChessman, color, keyBoard) {
+export function getAvailablePosition(currentPosition, nameChessman, color, keyBoardLocal) {
 
   // console.log(keyBoard);
   let arrayAvailablePosition = [];
+  let keyBoard = [...keyBoardLocal];
+
+
+  for (let h = 0; h < 8; h++) {
+    let row = []
+    for (let k = 0; k < 8; k++) {
+      row.push(keyBoardLocal[h][k])
+    }
+    keyBoard.push(row);
+  }
 
   //xét đường đi của con tốt
   if (nameChessman == 'pawn') {
@@ -557,55 +567,55 @@ export function getPoint(keyBoard) {
           if (keyBoard[row][col].chessman.color == 'black') {
 
             if (keyBoard[row][col].chessman.nameChessman == 'pawn') {
-              // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.pawnEvalBlack[row][col];
-              blackNum = blackNum + keyBoard[row][col].chessman.point
+              blackNum = blackNum + keyBoard[row][col].chessman.point + Var.pawnEvalBlack[row][col];
+              // blackNum = blackNum + keyBoard[row][col].chessman.point
             }
             if (keyBoard[row][col].chessman.nameChessman == 'knight') {
-              // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.knightEval[row][col];
-              blackNum = blackNum + keyBoard[row][col].chessman.point
+              blackNum = blackNum + keyBoard[row][col].chessman.point + Var.knightEval[row][col];
+              // blackNum = blackNum + keyBoard[row][col].chessman.point
             }
             if (keyBoard[row][col].chessman.nameChessman == 'king') {
-              // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.kingEvalBlack[row][col];
-              blackNum = blackNum + keyBoard[row][col].chessman.point
+              blackNum = blackNum + keyBoard[row][col].chessman.point + Var.kingEvalBlack[row][col];
+              // blackNum = blackNum + keyBoard[row][col].chessman.point
             }
             if (keyBoard[row][col].chessman.nameChessman == 'castle') {
-              // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.rookEvalBlack[row][col];
-              blackNum = blackNum + keyBoard[row][col].chessman.point
+              blackNum = blackNum + keyBoard[row][col].chessman.point + Var.rookEvalBlack[row][col];
+              // blackNum = blackNum + keyBoard[row][col].chessman.point
             }
             if (keyBoard[row][col].chessman.nameChessman == 'bishop') {
-              // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.bishopEvalBlack[row][col];
-              blackNum = blackNum + keyBoard[row][col].chessman.point
+              blackNum = blackNum + keyBoard[row][col].chessman.point + Var.bishopEvalBlack[row][col];
+              // blackNum = blackNum + keyBoard[row][col].chessman.point
             }
             if (keyBoard[row][col].chessman.nameChessman == 'queen') {
-              // blackNum = blackNum + keyBoard[row][col].chessman.point + Var.evalQueen[row][col];
-              blackNum = blackNum + keyBoard[row][col].chessman.point
+              blackNum = blackNum + keyBoard[row][col].chessman.point + Var.evalQueen[row][col];
+              // blackNum = blackNum + keyBoard[row][col].chessman.point
             }
           }
           if (keyBoard[row][col].chessman.color == 'white') {
 
             if (keyBoard[row][col].chessman.nameChessman == 'pawn') {
-              // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.pawnEvalWhite[row][col];
-              whitekNum = whitekNum + keyBoard[row][col].chessman.point
+              whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.pawnEvalWhite[row][col];
+              // whitekNum = whitekNum + keyBoard[row][col].chessman.point
             }
             if (keyBoard[row][col].chessman.nameChessman == 'knight') {
-              // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.knightEval[row][col];
-              whitekNum = whitekNum + keyBoard[row][col].chessman.point
+              whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.knightEval[row][col];
+              // whitekNum = whitekNum + keyBoard[row][col].chessman.point
             }
             if (keyBoard[row][col].chessman.nameChessman == 'king') {
-              // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.kingEvalWhite[row][col];
-              whitekNum = whitekNum + keyBoard[row][col].chessman.point
+              whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.kingEvalWhite[row][col];
+              // whitekNum = whitekNum + keyBoard[row][col].chessman.point
             }
             if (keyBoard[row][col].chessman.nameChessman == 'castle') {
-              // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.rookEvalWhite[row][col];
-              whitekNum = whitekNum + keyBoard[row][col].chessman.point
+              whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.rookEvalWhite[row][col];
+              // whitekNum = whitekNum + keyBoard[row][col].chessman.point
             }
             if (keyBoard[row][col].chessman.nameChessman == 'bishop') {
-              // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.bishopEvalWhite[row][col];
-              whitekNum = whitekNum + keyBoard[row][col].chessman.point
+              whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.bishopEvalWhite[row][col];
+              // whitekNum = whitekNum + keyBoard[row][col].chessman.point
             }
             if (keyBoard[row][col].chessman.nameChessman == 'queen') {
-              // whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.evalQueen[row][col];
-              whitekNum = whitekNum + keyBoard[row][col].chessman.point
+              whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.evalQueen[row][col];
+              // whitekNum = whitekNum + keyBoard[row][col].chessman.point
             }
           }
         }
@@ -623,7 +633,15 @@ export function getPoint(keyBoard) {
 
 export function resetHighlightPosition(keyBoard) {
   // console.log(keyBoard)
-  let keyBoardLocal = [...keyBoard];
+  let keyBoardLocal = [];
+
+    for (let h = 0; h < 8; h++) {
+      let row = []
+      for (let k = 0; k < 8; k++) {
+        row.push(keyBoard[h][k])
+      }
+      keyBoardLocal.push(row);
+    }
 
   for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
