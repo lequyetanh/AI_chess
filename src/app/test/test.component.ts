@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import * as Var from './../common/variable';
-import * as Func from './../common/function';
+import {
+  HostListener,
+  ChangeDetectorRef,
+  OnDestroy,
+  ViewChild,
+} from "@angular/core";
 
 @Component({
   selector: 'app-test',
@@ -9,1202 +13,235 @@ import * as Func from './../common/function';
 })
 export class TestComponent implements OnInit {
 
-  keyBoard = [];
-  keyBoardBackUp = [];
-
-  chessmanWaiting: any;
-  list_array_sort = [];
-  listAllPosition = [];
-  enemy: any = []
-
-  array_row_left = [];
-  array_row_right = [];
-  array_column_top = [];
-  array_column_bottom = [];
-  array_diagonal_top_right = [];
-  array_diagonal_right_bottom = [];
-  array_diagonal_bottom_left = [];
-  array_diagonal_left_top = [];
-
-  keyBoardDepth1 = [];
-  keyBoardDepth2 = [];
-  keyBoardDepth3 = [];
-
-  list_point_depth1 = [];
-  list_point_depth2 = [];
-  list_point_depth3 = [];
-
+  keyBoard: any = []
+  direction: any = 'right'
+  snake = []
+  timerId: any;
+  energy: any = {
+    position: [0, 10],
+    point: 10
+  }
+  score = 0;
 
   constructor() {
-    this.keyBoard = [...Var.keyBoard];
-    // console.log(this.keyBoard);
-    // Var.keyBoard.pop();
-    // console.log(this.keyBoard)
+    for (let i = 0; i < 20; i++) {
+      let row = []
+      for (let j = 0; j < 40; j++) {
+        row.push({
+          position: [i, j],
+          status: 'blank',
+          snake: null,
+        })
+      }
+      this.keyBoard.push(row);
+    }
+
+    this.keyBoard[0][0] = {
+      ...this.keyBoard[0][0],
+      status: 'occupy',
+      snake: {
+        part: 'body',
+      }
+    }
+
+    this.keyBoard[0][1] = {
+      ...this.keyBoard[0][1],
+      status: 'occupy',
+      snake: {
+        part: 'body',
+      }
+    }
+
+    this.keyBoard[0][2] = {
+      ...this.keyBoard[0][2],
+      status: 'occupy',
+      snake: {
+        part: 'head',
+      }
+    }
+
+    this.snake = [
+      {
+        position: [0, 2],
+        status: 'occupy',
+        snake: {
+          part: 'head'
+        }
+      },
+      {
+        position: [0, 1],
+        status: 'occupy',
+        snake: {
+          part: 'body'
+        }
+      },
+      {
+        position: [0, 0],
+        status: 'occupy',
+        snake: {
+          part: 'body'
+        }
+      }]
   }
 
   ngOnInit() {
-    this.keyBoard = this.resetHighlightPosition([...this.keyBoard]);
-    // console.log(this.keyBoard)
-    this.getPoint(this.keyBoard);
-    this.keyBoardBackUp = [...this.keyBoard];
+    this.timerId = setInterval(() => {
+      this.runSnake(this.keyBoard, this.snake);
+    }, 100)
   }
 
-  resetHighlightPosition(keyBoard) {
-    let keyBoardLocal = [...keyBoard];
-
-    for (let i = 0; i < 8; i++) {
-      for (let j = 0; j < 8; j++) {
-        keyBoardLocal[i][j].highlightPosition = 'normal';
-        if (keyBoardLocal[i][j].chessman != null) {
-          this.listAllPosition = [];
-          this.array_row_left = [];
-          this.array_row_right = [];
-          this.array_column_top = [];
-          this.array_column_bottom = [];
-          this.array_diagonal_top_right = [];
-          this.array_diagonal_right_bottom = [];
-          this.array_diagonal_bottom_left = [];
-          this.array_diagonal_left_top = [];
-          keyBoardLocal[i][j].chessman.availablePosition = this.getAvailablePosition(keyBoardLocal[i][j].position, keyBoardLocal[i][j].chessman.nameChessman, keyBoardLocal[i][j].chessman.color, [...keyBoardLocal]);
+  runSnake(keyBoard, snake) {
+    switch (this.direction) {
+      case 'right':
+        {
+          if (this.snake[0].position[1] == 39) {
+            alert("You lose")
+            clearInterval(this.timerId)
+          } else {
+            this.checkDie(snake, [snake[0].position[0], snake[0].position[1] + 1])
+            this.updatePositionSnake(keyBoard, snake, [snake[0].position[0], snake[0].position[1] + 1])
+          }
         }
-      }
+        break;
+      case 'left':
+        {
+          if (this.snake[0].position[1] == 0) {
+            alert("You lose")
+            clearInterval(this.timerId)
+          } else {
+            this.checkDie(snake, [snake[0].position[0], snake[0].position[1] - 1])
+            this.updatePositionSnake(keyBoard, snake, [snake[0].position[0], snake[0].position[1] - 1])
+          }
+        }
+        break;
+      case 'up':
+        {
+          if (this.snake[0].position[0] == 0) {
+            alert("You lose")
+            clearInterval(this.timerId)
+          } else {
+            this.checkDie(snake, [snake[0].position[0] - 1, snake[0].position[1]])
+            this.updatePositionSnake(keyBoard, snake, [snake[0].position[0] - 1, snake[0].position[1]])
+          }
+        }
+        break;
+      case 'down':
+        {
+          if (this.snake[0].position[0] == 19) {
+            alert("You lose")
+            clearInterval(this.timerId)
+          } else {
+            this.checkDie(snake, [snake[0].position[0] + 1, snake[0].position[1]])
+            this.updatePositionSnake(keyBoard, snake, [snake[0].position[0] + 1, snake[0].position[1]])
+          }
+        }
+        break;
     }
-    // console.log(keyBoardLocal)
-
-    // console.log(this.keyBoardLocal)
-    return keyBoardLocal;
-
-    // this.keyBoard[7][3].chessman.availablePosition = this.getAvailablePosition(this.keyBoard[7][3].position, this.keyBoard[7][3].chessman.nameChessman, this.keyBoard[7][3].chessman.color);
   }
 
-  //dạy quân cờ biết đi
-  getAvailablePosition(currentPosition, nameChessman, color, keyBoard) {
-
-    // console.log(keyBoard);
-    let arrayAvailablePosition = [];
-
-    //xét đường đi của con tốt
-    if (nameChessman == 'pawn') {
-
-      //xét tốt trắng
-      if (color == 'white') {
-        this.listAllPosition = [
-          [currentPosition[0] - 1, currentPosition[1]],
-          [currentPosition[0] - 1, currentPosition[1] - 1],
-          [currentPosition[0] - 1, currentPosition[1] + 1],
-        ];
-
-        for (let i = 0; i < this.listAllPosition.length; i++) {
-          if (this.listAllPosition[i][0] >= 0 && this.listAllPosition[i][0] <= 7 && this.listAllPosition[i][1] >= 0 && this.listAllPosition[i][1] <= 7) {
-            if (i == 0) {
-
-              //không tồn tại quân cờ ở vị trí đó
-              if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman == null) {
-
-                //dùng hàm kiểm tra xem
-                let currentAvailablePosition = Func.checkPositionPawnKnightKing('white', this.listAllPosition[i], keyBoard);
-                if (currentAvailablePosition != undefined) {
-                  arrayAvailablePosition.push(currentAvailablePosition);
-
-                  //nếu mà quân này mà chưa đi
-                  if (keyBoard[currentPosition[0]][currentPosition[1]].chessman.move == false) {
-                    //xét vị trí đi 2 bước của quân tốt
-                    if (keyBoard[currentPosition[0] - 2][currentPosition[1]].chessman == null) {
-                      let currentAvailablePosition = Func.checkPositionPawnKnightKing('white', [[currentPosition[0] - 2], [currentPosition[1]]], keyBoard);
-                      if (currentAvailablePosition != undefined) {
-                        arrayAvailablePosition.push(currentAvailablePosition);
-                      }
-                    }
-                  }
-                }
-              }
-
-              //tồn tại quân cờ đứng ở vị trí đó
-              if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman) {
-
-                //quân cờ đứng ở vị trí đó là kẻ thù
-                if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman.color != color) {
-
-                }
-              }
-            } else {
-              if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman == null) {
-
-              }
-              if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman) {
-                if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman.color != color) {
-                  let currentAvailablePosition = Func.checkPositionPawnKnightKing('white', this.listAllPosition[i], keyBoard);
-                  if (currentAvailablePosition != undefined) {
-                    arrayAvailablePosition.push(currentAvailablePosition);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      //xét tốt đen
-      if (color == 'black') {
-        this.listAllPosition = [
-          [currentPosition[0] + 1, currentPosition[1]],
-          [currentPosition[0] + 1, currentPosition[1] - 1],
-          [currentPosition[0] + 1, currentPosition[1] + 1]
-        ];
-
-        for (let i = 0; i < this.listAllPosition.length; i++) {
-          if (this.listAllPosition[i][0] >= 0 && this.listAllPosition[i][0] <= 7 && this.listAllPosition[i][1] >= 0 && this.listAllPosition[i][1] <= 7) {
-
-            //xet truong hop no nam ngay bên trên vị trí này
-            if (i == 0) {
-
-              //nếu mà vị trí ở trên vị trí quân tốt mà trống
-              if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman == null) {
-
-                let currentAvailablePosition = Func.checkPositionPawnKnightKing('black', this.listAllPosition[i], keyBoard);
-                if (currentAvailablePosition != undefined) {
-                  arrayAvailablePosition.push(currentAvailablePosition);
-
-                  // console.log(currentPosition)
-                  // console.log(keyBoard[currentPosition[0]][currentPosition[1]]);
-
-                  //vị trí hiện tại của quân tốt
-                  if (keyBoard[currentPosition[0]][currentPosition[1]].chessman.move == false) {
-                    //xét vị trí đi 2 bước của quân tốt
-                    if (keyBoard[currentPosition[0] + 2][currentPosition[1]].chessman == null) {
-                      let currentAvailablePosition = Func.checkPositionPawnKnightKing('white', [[currentPosition[0] + 2], [currentPosition[1]]], keyBoard);
-                      if (currentAvailablePosition != undefined) {
-                        arrayAvailablePosition.push(currentAvailablePosition);
-                      }
-                    }
-                  }
-                }
-              }
-              if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman) {
-                if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman.color != color) {
-
-                }
-              }
-            }
-
-            //xét các trường hợp còn lại
-            else {
-              if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman == null) {
-
-              }
-              if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman) {
-                if (keyBoard[this.listAllPosition[i][0]][this.listAllPosition[i][1]].chessman.color != color) {
-                  let currentAvailablePosition = Func.checkPositionPawnKnightKing('black', this.listAllPosition[i], keyBoard);
-                  if (currentAvailablePosition != undefined) {
-                    arrayAvailablePosition.push(currentAvailablePosition);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    if (nameChessman == 'knight') {
-      this.listAllPosition = [
-        [currentPosition[0] - 2, currentPosition[1] + 1],
-        [currentPosition[0] - 1, currentPosition[1] + 2],
-        [currentPosition[0] + 1, currentPosition[1] + 2],
-        [currentPosition[0] + 2, currentPosition[1] + 1],
-        [currentPosition[0] + 2, currentPosition[1] - 1],
-        [currentPosition[0] + 1, currentPosition[1] - 2],
-        [currentPosition[0] - 1, currentPosition[1] - 2],
-        [currentPosition[0] - 2, currentPosition[1] - 1],
-      ];
-      for (let i = 0; i < this.listAllPosition.length; i++) {
-        if (this.listAllPosition[i][0] >= 0 && this.listAllPosition[i][0] <= 7 && this.listAllPosition[i][1] >= 0 && this.listAllPosition[i][1] <= 7) {
-          let currentAvailablePosition = Func.checkPositionPawnKnightKing(color, this.listAllPosition[i], keyBoard);
-          // console.log(currentAvailablePosition);
-          if (currentAvailablePosition != undefined) {
-            arrayAvailablePosition.push(currentAvailablePosition);
-          }
-        }
-      }
-    }
-
-    if (nameChessman == 'king') {
-      this.listAllPosition = [
-        [currentPosition[0] - 1, currentPosition[1]],
-        [currentPosition[0] - 1, currentPosition[1] + 1],
-        [currentPosition[0], currentPosition[1] + 1],
-        [currentPosition[0] + 1, currentPosition[1] + 1],
-        [currentPosition[0] + 1, currentPosition[1]],
-        [currentPosition[0] + 1, currentPosition[1] - 1],
-        [currentPosition[0], currentPosition[1] - 1],
-        [currentPosition[0] - 1, currentPosition[1] - 1],
-      ];
-      for (let i = 0; i < this.listAllPosition.length; i++) {
-        if (this.listAllPosition[i][0] >= 0 && this.listAllPosition[i][0] <= 7 && this.listAllPosition[i][1] >= 0 && this.listAllPosition[i][1] <= 7) {
-          let currentAvailablePosition = Func.checkPositionPawnKnightKing(color, this.listAllPosition[i], keyBoard);
-          if (currentAvailablePosition != undefined) {
-            arrayAvailablePosition.push(currentAvailablePosition);
-          }
-        }
-      }
-    }
-
-    if (nameChessman == 'castle') {
-
-      //lấy ra danh sách các phần tử cùng hàng và cùng cột
-      for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-          if (keyBoard[i][j].position[0] == currentPosition[0] || keyBoard[i][j].position[1] == currentPosition[1]) {
-            this.listAllPosition.push(keyBoard[i][j].position);
-          }
-        }
-      }
-
-      for (let i = 0; i < this.listAllPosition.length; i++) {
-        //nếu phần tử cùng hàng
-        if (this.listAllPosition[i][0] == currentPosition[0]) {
-          if (this.listAllPosition[i][1] > currentPosition[1]) {
-            this.array_row_right.push(this.listAllPosition[i]);
-          }
-          if (this.listAllPosition[i][1] < currentPosition[1]) {
-            this.array_row_left.push(this.listAllPosition[i]);
-          }
-        }
-
-        //nếu phần tử cùng cột
-        if (this.listAllPosition[i][1] == currentPosition[1]) {
-          if (this.listAllPosition[i][0] > currentPosition[0]) {
-            this.array_column_bottom.push(this.listAllPosition[i]);
-          }
-          if (this.listAllPosition[i][0] < currentPosition[0]) {
-            this.array_column_top.push(this.listAllPosition[i]);
-          }
-        }
-      }
-
-      if (this.array_row_left[0] != undefined) {
-        this.array_row_left = Func.sortArray(this.array_row_left, 'cotTo')
-      }
-      if (this.array_row_right[0] != undefined) {
-        this.array_row_right = Func.sortArray(this.array_row_right, 'cotNho')
-      }
-      if (this.array_column_top[0] != undefined) {
-        this.array_column_top = Func.sortArray(this.array_column_top, 'hangTo')
-      }
-      if (this.array_column_bottom[0] != undefined) {
-        this.array_column_bottom = Func.sortArray(this.array_column_bottom, 'hangNho')
-      }
-
-      // console.log(this.array_column_top);
-      // console.log(this.array_row_right);
-      // console.log(this.array_column_bottom);
-      // console.log(this.array_row_left);
-      // console.log(";")
-
-      let arrayAvailablePositionTemporary = [];
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_row_right, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_row_left, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_column_bottom, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_column_top, color, keyBoard));
-
-      for (let i = 0; i < arrayAvailablePositionTemporary.length; i++) {
-        for (let j = 0; j < arrayAvailablePositionTemporary[i].length; j++) {
-          arrayAvailablePosition.push(arrayAvailablePositionTemporary[i][j]);
-        }
-      }
-    }
-
-    if (nameChessman == 'bishop') {
-      //lấy ra danh sách các phần tử cùng hàng chéo
-      for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-
-          if (Math.abs(currentPosition[0] - keyBoard[i][j].position[0]) == Math.abs(currentPosition[1] - keyBoard[i][j].position[1])) {
-            if (Math.abs(currentPosition[0] - keyBoard[i][j].position[0]) != 0) {
-              this.listAllPosition.push(keyBoard[i][j].position);
-            }
-          }
-        }
-      }
-
-      for (let i = 0; i < this.listAllPosition.length; i++) {
-        if (this.listAllPosition[i][0] < currentPosition[0] && this.listAllPosition[i][1] < currentPosition[1]) {
-          this.array_diagonal_left_top.push(this.listAllPosition[i]);
-        }
-        if (this.listAllPosition[i][0] > currentPosition[0] && this.listAllPosition[i][1] > currentPosition[1]) {
-          this.array_diagonal_right_bottom.push(this.listAllPosition[i]);
-        }
-        if (this.listAllPosition[i][0] < currentPosition[0] && this.listAllPosition[i][1] > currentPosition[1]) {
-          this.array_diagonal_top_right.push(this.listAllPosition[i]);
-        }
-        if (this.listAllPosition[i][0] > currentPosition[0] && this.listAllPosition[i][1] < currentPosition[1]) {
-          this.array_diagonal_bottom_left.push(this.listAllPosition[i]);
-        }
-      }
-
-      if (this.array_diagonal_left_top[0] != undefined) {
-        this.array_diagonal_left_top = Func.sortArray(this.array_diagonal_left_top, 'cotTo')
-      }
-      if (this.array_diagonal_right_bottom[0] != undefined) {
-        this.array_diagonal_right_bottom = Func.sortArray(this.array_diagonal_right_bottom, 'cotNho')
-      }
-      if (this.array_diagonal_top_right[0] != undefined) {
-        this.array_diagonal_top_right = Func.sortArray(this.array_diagonal_top_right, 'hangTo')
-      }
-      if (this.array_diagonal_bottom_left[0] != undefined) {
-        this.array_diagonal_bottom_left = Func.sortArray(this.array_diagonal_bottom_left, 'hangNho')
-      }
-
-      let arrayAvailablePositionTemporary = [];
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_diagonal_left_top, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_diagonal_right_bottom, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_diagonal_top_right, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_diagonal_bottom_left, color, keyBoard));
-
-      for (let i = 0; i < arrayAvailablePositionTemporary.length; i++) {
-        for (let j = 0; j < arrayAvailablePositionTemporary[i].length; j++) {
-          arrayAvailablePosition.push(arrayAvailablePositionTemporary[i][j]);
-        }
-      }
-
-      // console.log(this.listAllPosition);
-    }
-
-    if (nameChessman == 'queen') {
-      for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-          if (keyBoard[i][j].position[0] == currentPosition[0] || keyBoard[i][j].position[1] == currentPosition[1] || Math.abs(currentPosition[0] - keyBoard[i][j].position[0]) == Math.abs(currentPosition[1] - keyBoard[i][j].position[1])) {
-            this.listAllPosition.push(keyBoard[i][j].position);
-          }
-        }
-      }
-
-      // console.log(this.listAllPosition);
-
-      for (let i = 0; i < this.listAllPosition.length; i++) {
-        if (this.listAllPosition[i][0] == currentPosition[0]) {
-          if (this.listAllPosition[i][1] > currentPosition[1]) {
-            this.array_row_right.push(this.listAllPosition[i]);
-          }
-          if (this.listAllPosition[i][1] < currentPosition[1]) {
-            this.array_row_left.push(this.listAllPosition[i]);
-          }
-        }
-
-        //nếu phần tử cùng cột
-        if (this.listAllPosition[i][1] == currentPosition[1]) {
-          if (this.listAllPosition[i][0] > currentPosition[0]) {
-            this.array_column_bottom.push(this.listAllPosition[i]);
-          }
-          if (this.listAllPosition[i][0] < currentPosition[0]) {
-            this.array_column_top.push(this.listAllPosition[i]);
-          }
-        }
-      }
-
-      for (let i = 0; i < this.listAllPosition.length; i++) {
-        if (this.listAllPosition[i][0] < currentPosition[0] && this.listAllPosition[i][1] < currentPosition[1]) {
-          this.array_diagonal_left_top.push(this.listAllPosition[i]);
-        }
-        if (this.listAllPosition[i][0] > currentPosition[0] && this.listAllPosition[i][1] > currentPosition[1]) {
-          this.array_diagonal_right_bottom.push(this.listAllPosition[i]);
-        }
-        if (this.listAllPosition[i][0] < currentPosition[0] && this.listAllPosition[i][1] > currentPosition[1]) {
-          this.array_diagonal_top_right.push(this.listAllPosition[i]);
-        }
-        if (this.listAllPosition[i][0] > currentPosition[0] && this.listAllPosition[i][1] < currentPosition[1]) {
-          this.array_diagonal_bottom_left.push(this.listAllPosition[i]);
-        }
-      }
-
-
-
-      if (this.array_diagonal_left_top[0] != undefined) {
-        this.array_diagonal_left_top = Func.sortArray(this.array_diagonal_left_top, 'cotTo')
-      }
-      if (this.array_diagonal_right_bottom[0] != undefined) {
-        this.array_diagonal_right_bottom = Func.sortArray(this.array_diagonal_right_bottom, 'cotNho')
-      }
-      if (this.array_diagonal_top_right[0] != undefined) {
-        this.array_diagonal_top_right = Func.sortArray(this.array_diagonal_top_right, 'hangTo')
-      }
-      if (this.array_diagonal_bottom_left[0] != undefined) {
-        this.array_diagonal_bottom_left = Func.sortArray(this.array_diagonal_bottom_left, 'hangNho')
-      }
-      if (this.array_row_left[0] != undefined) {
-        this.array_row_left = Func.sortArray(this.array_row_left, 'cotTo')
-      }
-      if (this.array_row_right[0] != undefined) {
-        this.array_row_right = Func.sortArray(this.array_row_right, 'cotNho')
-      }
-      if (this.array_column_top[0] != undefined) {
-        this.array_column_top = Func.sortArray(this.array_column_top, 'hangTo')
-      }
-      if (this.array_column_bottom[0] != undefined) {
-        this.array_column_bottom = Func.sortArray(this.array_column_bottom, 'hangNho')
-      }
-
-      let arrayAvailablePositionTemporary = [];
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_diagonal_left_top, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_diagonal_right_bottom, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_diagonal_top_right, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_diagonal_bottom_left, color, keyBoard));
-
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_row_left, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_row_right, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_column_top, color, keyBoard));
-      arrayAvailablePositionTemporary.push(Func.checkPositionCastleBishopQueen(this.array_column_bottom, color, keyBoard));
-
-
-
-      for (let i = 0; i < arrayAvailablePositionTemporary.length; i++) {
-        for (let j = 0; j < arrayAvailablePositionTemporary[i].length; j++) {
-          arrayAvailablePosition.push(arrayAvailablePositionTemporary[i][j]);
-        }
-      }
-
-    }
-
-    return arrayAvailablePosition;
-  }
-
-  getPoint(keyBoard) {
-    let blackNum = 0;
-    let whitekNum = 0;
-    try {
-      for (let row = 0; row < keyBoard.length; row++) {
-        for (let col = 0; col < keyBoard[row].length; col++) {
-          if (keyBoard[row][col].status == 'occupy') {
-            if (keyBoard[row][col].chessman.color == 'black') {
-
-              if (keyBoard[row][col].chessman.nameChessman == 'pawn') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.pawnEvalBlack[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.pawnEvalBlack[row][col];
-              }
-              if (keyBoard[row][col].chessman.nameChessman == 'knight') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.knightEval[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.knightEval[row][col];
-              }
-              if (keyBoard[row][col].chessman.nameChessman == 'king') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.kingEvalBlack[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.kingEvalBlack[row][col];
-              }
-              if (keyBoard[row][col].chessman.nameChessman == 'castle') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.rookEvalBlack[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.rookEvalBlack[row][col];
-              }
-              if (keyBoard[row][col].chessman.nameChessman == 'bishop') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.bishopEvalBlack[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.bishopEvalBlack[row][col];
-              }
-              if (keyBoard[row][col].chessman.nameChessman == 'queen') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.evalQueen[row][col])
-                blackNum = blackNum + keyBoard[row][col].chessman.point + Var.evalQueen[row][col];
-              }
-            }
-            if (keyBoard[row][col].chessman.color == 'white') {
-
-              if (keyBoard[row][col].chessman.nameChessman == 'pawn') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.pawnEvalWhite[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.pawnEvalWhite[row][col];
-              }
-              if (keyBoard[row][col].chessman.nameChessman == 'knight') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.knightEval[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.knightEval[row][col];
-              }
-              if (keyBoard[row][col].chessman.nameChessman == 'king') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.kingEvalWhite[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.kingEvalWhite[row][col];
-              }
-              if (keyBoard[row][col].chessman.nameChessman == 'castle') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.rookEvalWhite[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.rookEvalWhite[row][col];
-              }
-              if (keyBoard[row][col].chessman.nameChessman == 'bishop') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.bishopEvalWhite[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.bishopEvalWhite[row][col];
-              }
-              if (keyBoard[row][col].chessman.nameChessman == 'queen') {
-                // console.log('[' + row + ']' + '[' + col + ']=', keyBoard[row][col].chessman.point + Var.evalQueen[row][col])
-                whitekNum = whitekNum + keyBoard[row][col].chessman.point + Var.evalQueen[row][col];
-              }
-            }
-          }
-        }
-      }
-    }
-    catch (error) {
-      console.log(error)
-    }
-    // console.log(blackNum - whitekNum)
-    // console.log(blackNum);
-    // console.log(whitekNum)
-    return blackNum - whitekNum;
-  }
-
-  moveChessman(eachKeyboard) {
-    // console.log(eachKeyboard)
-
-    //khi bấm vào nút đang ở chế độ highlightPosition == normal thì sẽ hiển thị các nút highlight lên
-    if (eachKeyboard.highlightPosition == 'normal') {
-
-      // console.log(eachKeyboard.chessman.availablePosition);
-      if (eachKeyboard.status == 'occupy') {
-        for (let i = 0; i < 8; i++) {
-          for (let j = 0; j < 8; j++) {
-            this.keyBoard[i][j].highlightPosition = 'normal';
-          }
-        }
-
-        this.chessmanWaiting = eachKeyboard;
-        // console.log(this.chessmanWaiting)
-        this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].highlightPosition = 'ally';
-
-        //cập nhật highlightPosition các nút nằm ở ví trí đi của nút đang trỏ tới
-        for (let k = 0; k < eachKeyboard.chessman.availablePosition.length; k++) {
-          for (let i = 0; i < 8; i++) {
-            for (let j = 0; j < 8; j++) {
-              if (eachKeyboard.chessman.availablePosition[k].idKeyBoard == this.keyBoard[i][j].idKeyBoard) {
-                // console.log( this.keyBoard[i][j])
-                if (eachKeyboard.chessman.availablePosition[k].status == 'blank') {
-                  this.keyBoard[i][j].highlightPosition = 'ally';
-                } else {
-                  this.keyBoard[i][j].highlightPosition = 'enemy';
-                }
-              }
-            }
-          }
-        }
-      }
-
-      //khi click vào nút blank thì ko có hiện tượng gì xảy ra
-      if (eachKeyboard.status == 'blank') {
-
-      }
-    }
-
-    //khi mà ở bấm vào nút đang ở chế độ đồng minh hoặc là kẻ thù thì sẽ thay đổi vị trí quân cờ
-    if (eachKeyboard.highlightPosition == 'ally' || eachKeyboard.highlightPosition == 'enemy') {
-      if (eachKeyboard.idKeyBoard != this.chessmanWaiting.idKeyBoard) {
-        // console.log(eachKeyboard);
-        // console.log(eachKeyboard.position);
-
-        //di chuyển chessmanWaiting sang vị trí mới trỏ
-        this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].highlightPosition = 'normal';
-        this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].status = 'occupy';
-        this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].chessman = this.chessmanWaiting['chessman'];
-        // console.log(this.keyBoard[i][j])
-        this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].chessman.move = true;
-        this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].chessman.availablePosition = [];
-
-        this.keyBoard[this.chessmanWaiting.position[0]][this.chessmanWaiting.position[1]].highlightPosition = 'normal';
-        this.keyBoard[this.chessmanWaiting.position[0]][this.chessmanWaiting.position[1]].status = 'blank';
-        this.keyBoard[this.chessmanWaiting.position[0]][this.chessmanWaiting.position[1]].chessman = null;
-
-        this.keyBoard = this.resetHighlightPosition(this.keyBoard);
-        // this.getPoint(this.keyBoard)
-        // console.log(this.keyBoard);
-        // this.enemy = this.updateEnemy('black', this.keyBoard);
-        // console.log(this.enemy);
-        setTimeout(() => {
-          this.enemyMove();
-        }, 0)
+  checkDie(snake, position) {
+    for (let i = 0; i < snake.length; i++) {
+      if (position[0] == snake[i].position[0] && position[1] == snake[i].position[1]) {
+        alert("You lose")
+        clearInterval(this.timerId)
+        break;
       }
     }
   }
 
-  minimax(keyBoard, depth, maximizingPlayer, color) {
-    return (this.alphabeta(keyBoard, depth, -10000, 10000, maximizingPlayer, color));
+  addSnake(snake, position) {
+    this.score += 10;
+    snake.push({
+      position: position,
+      status: 'occupy',
+      snake: {
+        part: 'body'
+      }
+    })
   }
 
-  alphabeta(keyBoard, depth, a, b, maximizingPlayer, color) {
-
-    let movingOn = false;
-    let list_keyBoard_depth_1 = [];
-    let enemy = Func.updateEnemy(color, keyBoard);
-    for (let i = 0; i < enemy.length; i++) {
-      if (enemy[i].availablePosition[0] != undefined) {
-        movingOn = true;
-        for (let j = 0; j < enemy[i].availablePosition.length; j++) {
-          let keyBoardDepth1 = [];
-          // console.log(enemy[i].availablePosition[])
-          // console.log([...this.keyBoard]);
-          keyBoardDepth1 = [...this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], [...keyBoard])];
-          // console.log(keyBoardDepth1)
-          keyBoardDepth1 = this.resetHighlightPosition([...keyBoardDepth1]);
-          // console.log(keyBoardDepth1)
-          list_keyBoard_depth_1.push(keyBoardDepth1);
-
-          // console.log(this.keyBoard);
-          // console.log(this.keyBoard);
-
-          // console.log(list_keyBoard_depth_1);
-          // console.log(enemy[i].availablePosition[j].position)
-          // console.log(list_keyBoard_depth_1);
-          // if (j == 0) {
-          //   break;
-          // }
-        }
-        // break
-      }
-    }
-
-    if (depth == 1) {
-      this.keyBoardDepth1 = [...list_keyBoard_depth_1];
-      for (let m = 0; m < list_keyBoard_depth_1.length; m++) {
-        this.list_point_depth1.push(this.getPoint(list_keyBoard_depth_1[m]));
-      }
-    }
-
-    // console.log(keyBoard, a, b, maximizingPlayer);
-    if (movingOn == false || depth == 0) {
-      //   console.log(depth)
-      //   console.log('keyBoard: ' + keyBoard);
-      return this.getPoint(keyBoard);
-    }
-    if (maximizingPlayer == 'max') {
-
-      for (let i = 0; i < list_keyBoard_depth_1.length; i++) {
-        a = Math.max(a, this.alphabeta(list_keyBoard_depth_1[i], depth - 1, a, b, 'min', 'white'));
-        // console.log(keyBoard);
-        // console.log('a: cho goi ham max' + '-----------' + a);
-        if (a >= b) {
-          // console.log('a: ' + a);
-          // console.log('b: ' + b);
-
-          break;
-        }
-      }
-      return a;
-    } else {
-      for (let i = 0; i < list_keyBoard_depth_1.length; i++) {
-        b = Math.min(b, this.alphabeta(list_keyBoard_depth_1[i], depth - 1, a, b, 'max', 'black'));
-        // console.log(keyBoard);
-        // console.log('b: cho goi ham min' + '--------' + b);
-        if (a >= b) {
-          // console.log('a: ' + a);
-          // console.log('b: ' + b);
-          break;
-        }
-      }
-      return b;
+  createEnergy() {
+    this.energy = {
+      position: [Math.floor(Math.random() * 19), Math.floor(Math.random() * 39)],
+      point: 10
     }
   }
 
-  enemyMove() {
-    // this.getBestMove();
-    this.keyBoardDepth1 = [];
-    this.keyBoardDepth2 = [];
-    this.keyBoardDepth3 = [];
+  updatePositionSnake(keyBoard, snake, headPosition) {
+    let end = []
+    // console.log(headPosition)
+    for (let i = snake.length - 1; i >= 0; i--) {
 
-    this.list_point_depth1 = [];
-    this.list_point_depth2 = [];
-    this.list_point_depth3 = [];
-    // console.log(this.keyBoard)
-    let bestValue = this.minimax(this.keyBoard, 1, 'max', 'black');
-    console.log(bestValue);
-    console.log(this.list_point_depth1);
-    console.log(this.keyBoardDepth1)
-
-    for (let i = 0; i < this.list_point_depth1.length; i++) {
-      if (this.list_point_depth1[i] == bestValue) {
-        this.keyBoard = this.keyBoardDepth1[i]
+      if (i == 0) {
+        snake[i] = {
+          position: headPosition,
+          status: 'occupy',
+          snake: {
+            part: 'head',
+          }
+        }
+        // console.log(snake)
+        keyBoard[headPosition[0]][headPosition[1]] = snake[i]
+        break;
       }
-    }
 
-    // this.keyBoard = this.resetHighlightPosition(this.keyBoard);
-  }
-
-  getBestMove() {
-    //======================================độ sâu cấp 1======================================
-    // console.log(this.keyBoard)
-    let list_point_depth_1 = [];
-    let keyBoardBestValue = [];
-    this.enemy = Func.updateEnemy('black', this.keyBoardBackUp);
-    // console.log(this.enemy)
-    for (let i = 0; i < this.enemy.length; i++) {
-      if (this.enemy[i].availablePosition[0] != undefined) {
-        for (let j = 0; j < this.enemy[i].availablePosition.length; j++) {
-          let keyBoardDepth1 = [];
-          // console.log(this.enemy[i].availablePosition[])
-          // console.log([...this.keyBoardBackUp]);
-          keyBoardDepth1 = [...this.enemyMoveEmulator(this.enemy[i].position, this.enemy[i].availablePosition[j].position, this.enemy[i], [...this.keyBoardBackUp])];
-          console.log("===================================================")
-          // console.log(keyBoardDepth1)
-          keyBoardDepth1 = this.resetHighlightPosition([...keyBoardDepth1]);
-          // console.log(keyBoardDepth1)
-          this.keyBoardDepth1.push(keyBoardDepth1);
-          keyBoardBestValue.push(keyBoardDepth1);
-
-          // console.log(this.keyBoard);
-          // console.log(this.keyBoardBackUp);
-
-          // console.log(this.keyBoardDepth1);
-          // console.log(this.enemy[i].availablePosition[j].position)
-          // console.log(list_point_depth_1);
-          // if (j == 0) {
-          //   break;
-          // }
-        }
-        // break
-      }
-    }
-
-    // // list_point_depth_1.length = this.keyBoardDepth1.length;
-    // // console.log(keyBoardBestValue[1]);
-    // // console.log(this.keyBoardDepth1);
-    // // console.log(keyBoardBestValue);
-    for (let m = 0; m < keyBoardBestValue.length; m++) {
-      list_point_depth_1.push(this.getPoint(keyBoardBestValue[m]));
-      // if (m == 33) {
-      //   console.log(keyBoardBestValue[m]);
-      // }
-    }
-
-    // console.log(this.keyBoard);
-    // console.log(this.keyBoardBackUp);
-
-    // // console.log(this.keyBoardDepth1[35]);
-    console.log(list_point_depth_1);
-    // // this.resetHighlightPosition(this.keyBoardBackUp);
-    // // this.updateEnemy('white', this.keyBoardBackUp);
-    // // console.log(this.enemy);
-  }
-
-  enemyMoveEmulator(startPosition, endPosition, chessman, keyBoardInput) {
-    // console.log([endPosition[0]],[endPosition[1]]);
-    // console.log(keyBoard[start][end])
-
-    // console.log(startPosition)
-    // console.log(endPosition)
-    let keyBoardLocal = [];
-    // console.log(keyBoardLocal)
-
-    for (let i = 0; i < 8; i++) {
-      let row = [];
-      for (let j = 0; j < 8; j++) {
-        if (i == endPosition[0] && j == endPosition[1]) {
-          row.push({
-            idKeyBoard: keyBoardInput[i][j].idKeyBoard,
-            position: endPosition,
-            highlightPosition: 'normal',
-            status: 'occupy',
-            chessman: {
-              color: chessman.color,
-              idChessman: chessman.idChessman,
-              nameChessman: chessman.nameChessman,
-              move: true,
-              image: chessman.image,
-              point: chessman.point,
-              availablePosition: [],
-            }
-          });
-          continue;
-        }
-
-        if (i == startPosition[0] && j == startPosition[1]) {
-          row.push({
-            idKeyBoard: keyBoardInput[i][j].idKeyBoard,
-            position: startPosition,
-            highlightPosition: 'normal',
-            status: 'blank',
-            chessman: null
-          });
-          continue;
-        }
-        else {
-          row.push(keyBoardInput[i][j]);
+      if (i == snake.length - 1) {
+        end = [snake[i].position[0], snake[i].position[1]]
+        keyBoard[snake[i].position[0]][snake[i].position[1]] = {
+          ...keyBoard[snake[i].position[0]][snake[i].position[1]],
+          status: 'blank',
+          snake: null,
         }
       }
-      keyBoardLocal.push(row);
-    }
-    // keyBoardLocal = this.resetHighlightPosition(keyBoardLocal);
 
-    // console.log("--------", keyBoardLocal)
-    return keyBoardLocal;
+      snake[i] = {
+        ...snake[i - 1]
+      }
+      snake[i].snake.part = 'body'
+      keyBoard[snake[i].position[0]][snake[i].position[1]] = snake[i]
+
+    }
+    if (snake[0].position[0] == this.energy.position[0] && snake[0].position[1] == this.energy.position[1]) {
+      this.addSnake(snake, end)
+      this.createEnergy();
+    }
+    // console.log(snake)
   }
 
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    // trái
+    if (event.keyCode == 37) {
+      if (this.snake[0].position[0] == this.snake[1].position[0] && this.snake[0].position[1] == this.snake[1].position[1] + 1) {
+
+      } else {
+        this.direction = 'left';
+      }
+    }
+    // phải
+    if (event.keyCode == 39) {
+      if (this.snake[0].position[0] == this.snake[1].position[0] && this.snake[0].position[1] + 1 == this.snake[1].position[1]) {
+
+      } else {
+        this.direction = 'right';
+      }
+    }
+    // trên
+    if (event.keyCode == 38) {
+      if (this.snake[0].position[0] == this.snake[1].position[0] + 1 && this.snake[0].position[1] == this.snake[1].position[1]) {
+
+      } else {
+        this.direction = 'up';
+      }
+    }
+    // dưới
+    if (event.keyCode == 40) {
+      if (this.snake[0].position[0] + 1 == this.snake[1].position[0] && this.snake[0].position[1] == this.snake[1].position[1]) {
+
+      } else {
+        this.direction = 'down';
+      }
+    }
+  }
 
 }
-
-
-
-// import { Component, OnInit } from '@angular/core';
-// import * as Var from './../common/variable';
-// import * as Func from './../common/function';
-// import { MyserviceService } from './../myservice.service';
-
-// @Component({
-//   selector: 'app-chess-minimax',
-//   templateUrl: './chess-minimax.component.html',
-//   styleUrls: ['./chess-minimax.component.scss']
-// })
-// export class ChessMinimaxComponent implements OnInit {
-
-//   keyBoard = [];
-//   keyBoardBackUp = [];
-//   depth_length = 1;
-
-//   chessmanWaiting: any;
-//   list_array_sort = [];
-//   listAllPosition = [];
-//   enemy: any = []
-
-//   array_row_left = [];
-//   array_row_right = [];
-//   array_column_top = [];
-//   array_column_bottom = [];
-//   array_diagonal_top_right = [];
-//   array_diagonal_right_bottom = [];
-//   array_diagonal_bottom_left = [];
-//   array_diagonal_left_top = [];
-
-//   keyBoardDepth1 = [];
-//   keyBoardDepth2 = [];
-//   keyBoardDepth3 = [];
-
-//   list_point_depth1 = [];
-//   list_point_depth2 = [];
-//   list_point_depth3 = [];
-//   item = [{
-//     id: 1
-//   }]
-//   index = 0;
-
-//   keyBoardBestValueChange = [];
-
-//   constructor(
-//   ) {
-//     this.keyBoard = [...Var.keyBoard];
-//     // console.log(this.keyBoard);
-//     // Var.keyBoard.pop();
-//     // console.log(this.keyBoard)
-//     console.log(Func.getPoint(this.keyBoard))
-
-//   }
-
-//   ngOnInit() {
-//     this.keyBoard = Func.resetHighlightPosition([...this.keyBoard]);
-//     // console.log(this.keyBoard)
-//     // this.getPoint(this.keyBoard);
-//   }
-
-//   update(item) {
-//     item.id = 100
-//     console.log(JSON.stringify(this.item))
-//   }
-
-//   moveChessman(eachKeyboard) {
-//     // console.log(eachKeyboard)
-
-//     //khi bấm vào nút đang ở chế độ highlightPosition == normal thì sẽ hiển thị các nút highlight lên
-//     if (eachKeyboard.highlightPosition == 'normal') {
-
-//       // console.log(eachKeyboard.chessman.availablePosition);
-//       if (eachKeyboard.status == 'occupy') {
-//         for (let i = 0; i < 8; i++) {
-//           for (let j = 0; j < 8; j++) {
-//             this.keyBoard[i][j].highlightPosition = 'normal';
-//           }
-//         }
-
-//         this.chessmanWaiting = eachKeyboard;
-//         // console.log(this.chessmanWaiting)
-//         this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].highlightPosition = 'ally';
-
-//         //cập nhật highlightPosition các nút nằm ở ví trí đi của nút đang trỏ tới
-//         for (let k = 0; k < eachKeyboard.chessman.availablePosition.length; k++) {
-//           for (let i = 0; i < 8; i++) {
-//             for (let j = 0; j < 8; j++) {
-//               if (eachKeyboard.chessman.availablePosition[k].idKeyBoard == this.keyBoard[i][j].idKeyBoard) {
-//                 // console.log( this.keyBoard[i][j])
-//                 if (eachKeyboard.chessman.availablePosition[k].status == 'blank') {
-//                   this.keyBoard[i][j].highlightPosition = 'ally';
-//                 } else {
-//                   this.keyBoard[i][j].highlightPosition = 'enemy';
-//                 }
-//               }
-//             }
-//           }
-//         }
-//       }
-
-//       //khi click vào nút blank thì ko có hiện tượng gì xảy ra
-//       if (eachKeyboard.status == 'blank') {
-
-//       }
-//     }
-
-//     //khi mà ở bấm vào nút đang ở chế độ đồng minh hoặc là kẻ thù thì sẽ thay đổi vị trí quân cờ
-//     if (eachKeyboard.highlightPosition == 'ally' || eachKeyboard.highlightPosition == 'enemy') {
-//       if (eachKeyboard.idKeyBoard != this.chessmanWaiting.idKeyBoard) {
-//         // console.log(eachKeyboard);
-//         // console.log(eachKeyboard.position);
-
-//         //di chuyển chessmanWaiting sang vị trí mới trỏ
-//         this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].highlightPosition = 'normal';
-//         this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].status = 'occupy';
-//         this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].chessman = this.chessmanWaiting['chessman'];
-//         // console.log(this.keyBoard[i][j])
-//         this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].chessman.move = true;
-//         this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].chessman.availablePosition = [];
-
-//         this.keyBoard[this.chessmanWaiting.position[0]][this.chessmanWaiting.position[1]].highlightPosition = 'normal';
-//         this.keyBoard[this.chessmanWaiting.position[0]][this.chessmanWaiting.position[1]].status = 'blank';
-//         this.keyBoard[this.chessmanWaiting.position[0]][this.chessmanWaiting.position[1]].chessman = null;
-
-
-//         let equal = Func.resetHighlightPosition(JSON.parse(JSON.stringify(this.keyBoard)));
-//         this.keyBoard = Func.resetHighlightPosition(JSON.parse(JSON.stringify(equal)));
-
-//         console.log("====================================Enemy==========================================")
-//         // this.getPoint(this.keyBoard)
-//         // console.log(this.keyBoard);
-//         // this.enemy = this.updateEnemy('black', this.keyBoard);
-//         // console.log(this.getPoint(this.keyBoard));
-
-//         // console.log(this.chessService.keyBoard);
-//         // console.log(this.chessService.keyBoardBackUp);
-
-//         // setTimeout(() => {
-
-//         // console.log(equal);
-//         this.enemyMove(equal);
-
-//         // }, 0)
-//       }
-//     }
-//   }
-
-//   enemyMove(keyBoard) {
-
-//     // console.log(keyBoard)
-
-//     // this.getBestMove();
-//     this.keyBoardDepth1 = [];
-//     this.keyBoardDepth2 = [];
-//     this.keyBoardDepth3 = [];
-
-//     this.list_point_depth1 = [];
-//     this.list_point_depth2 = [];
-//     this.list_point_depth3 = [];
-//     // console.log(this.keyBoard)
-//     let bestValue = this.minimax([...keyBoard], 1, 'max', 'black');
-//     console.log("=======================================best value==================================")
-//     console.log(bestValue);
-//     // console.log(this.list_point_depth1);
-//     // console.log(this.keyBoard)
-//     // console.log(this.keyBoardDepth1)
-//     // console.log(this.keyBoardDepth2)
-
-//     this.keyBoard = this.keyBoardDepth1['keyBoardDepth1']
-
-//   }
-
-//   minimax(keyBoard, depth, maximizingPlayer, color) {
-//     // return 1
-//     return (this.alphabeta([...keyBoard], depth, -10000, 10000, maximizingPlayer, color, { keyBoardDepth1: null, keyBoardDepth2: null, keyBoardDepth3: null, point: null }));
-//   }
-
-//   alphabeta(keyBoard, depth, a, b, maximizingPlayer, color, father_keyBoard) {
-
-//     let movingOn = false;
-
-//     let keyBoardLocal = keyBoard;
-//     let enemy = Func.updateEnemy(color, keyBoard);
-//     // console.log(enemy)
-//     for (let i = 0; i < enemy.length; i++) {
-//       if (enemy[i].availablePosition[0] != undefined) {
-//         movingOn = true;
-//         break;
-//       }
-//     }
-
-//     // console.log(keyBoardLocal)
-//     // console.log(enemy)
-
-
-//     // console.log(keyBoard, a, b, maximizingPlayer);
-//     if (depth == 3) {
-//       //   console.log(depth)
-//       //   console.log('keyBoard: ' + keyBoard);
-//       // console.log(Func.getPoint(keyBoardLocal))
-
-//       // this.list_point_depth1.push(Func.getPoint(keyBoardLocal))
-//       console.log(Func.getPoint(keyBoardLocal));
-
-//       father_keyBoard.point = Func.getPoint(keyBoardLocal);
-//       this.keyBoardBestValueChange = JSON.parse(JSON.stringify(father_keyBoard));
-//       // this.list_point_depth1.push(this.getPoint(keyBoard));
-//       return Func.getPoint(keyBoardLocal);
-//     }
-
-//     // keyBoard = this.resetHighlightPosition([...keyBoard]);
-
-//     // console.log(item_father)
-
-
-//     if (maximizingPlayer == 'max') {
-
-//       let case_alpha_beta = false;
-//       // console.log(enemy)
-
-//       let keyBoardLocalMaxValue = []
-//       for (let i = 0; i < enemy.length; i++) {
-//         // console.log(keyBoard);
-//         // console.log(enemy)
-//         if (case_alpha_beta) {
-//           break;
-//         } else {
-//           if (enemy[i].availablePosition[0] != undefined) {
-//             movingOn = true;
-//             for (let j = 0; j < enemy[i].availablePosition.length; j++) {
-//               let keyBoardValue = [];
-
-//               // console.log("=======================================Keyboard Value==================================")
-//               keyBoardValue = JSON.parse(JSON.stringify(Func.resetHighlightPosition(this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], keyBoardLocal))));
-
-//               if (depth == 1) {
-//                 father_keyBoard.keyBoardDepth1 = JSON.parse(JSON.stringify(keyBoardValue));
-//               }
-//               // console.log(keyBoardValue)            // thằng này không sai
-//               // console.log(keyBoardLocal)            // sai ở thằng này đéo hiểu sao data lại bị thay đổi
-//               console.log('============================point depth 2==================================')
-//               console.log("index: " + this.index++)
-//               a = Math.max(a, this.alphabeta(keyBoardValue, depth + 1, a, b, 'min', 'white', father_keyBoard));
-//               // console.log('============================end depth 2==================================')
-
-//               if (a >= b) {
-//                 case_alpha_beta = true;
-//                 break;
-//               }
-//               // if (index == 1) {
-//               //   case_alpha_beta = true;
-//               //   break;
-//               // }
-
-//               if (a == this.keyBoardDepth2['point']) {
-//                 keyBoardLocalMaxValue = JSON.parse(JSON.stringify(this.keyBoardDepth2));
-//               }
-//             }
-//           }
-//         }
-//       }
-//       // console.log(keyBoardLocalMaxValue)
-
-//       if(case_alpha_beta == true){
-
-//       }else{
-//         this.keyBoardDepth1 = keyBoardLocalMaxValue;
-//       }
-//       // console.log(this.keyBoardDepth1['keyBoardDepth1'])
-//       return a;
-//     } else {
-//       // if (item_father.depth1 == 21) {
-//       // console.log(keyBoard)
-//       // console.log(enemy)
-//       // }
-//       let case_alpha_beta = false;
-
-//       let keyBoardLocalMinValue = []
-//       // console.log("min")
-//       // console.log(enemy)
-//       for (let i = 0; i < enemy.length; i++) {
-//         if (case_alpha_beta) {
-//           break;
-//         } else {
-//           if (enemy[i].availablePosition[0] != undefined) {
-//             movingOn = true;
-//             for (let j = 0; j < enemy[i].availablePosition.length; j++) {
-//               let keyBoardValue = [];
-//               keyBoardValue = JSON.parse(JSON.stringify(Func.resetHighlightPosition(this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], keyBoardLocal))));
-//               // console.log(keyBoardDepth1)
-
-//               if (depth == 2) {
-//                 father_keyBoard.keyBoardDepth2 = JSON.parse(JSON.stringify(keyBoardValue));
-//               }
-
-//               b = Math.min(b, this.alphabeta(keyBoardValue, depth + 1, a, b, 'max', 'black', father_keyBoard));
-
-//               if (a >= b) {
-//                 case_alpha_beta = true;
-//                 break;
-//               }
-
-//               if (b == this.keyBoardBestValueChange['point']) {
-//                 keyBoardLocalMinValue = JSON.parse(JSON.stringify(this.keyBoardBestValueChange));
-//               }
-//             }
-//           }
-//         }
-//       }
-//       // console.log(keyBoardLocalMinValue)
-//       if(case_alpha_beta == true){
-
-//       }else{
-//         this.keyBoardDepth2 = keyBoardLocalMinValue;
-//       }
-//       return b;
-//     }
-//   }
-
-
-//   enemyMoveEmulator(startPosition, endPosition, chessman, keyBoardInput) {
-//     // console.log([endPosition[0]],[endPosition[1]]);
-//     // console.log(keyBoard[start][end])
-
-//     // console.log(startPosition)
-//     // console.log(endPosition)
-//     let keyBoardNewInput = JSON.parse(JSON.stringify(keyBoardInput));
-//     let keyBoardLocal = [];
-//     // console.log(keyBoardLocal)
-
-//     for (let i = 0; i < 8; i++) {
-//       let row = [];
-//       for (let j = 0; j < 8; j++) {
-//         if (i == endPosition[0] && j == endPosition[1]) {
-//           row.push({
-//             idKeyBoard: keyBoardNewInput[i][j].idKeyBoard,
-//             position: [endPosition[0], endPosition[1]],
-//             highlightPosition: 'normal',
-//             status: 'occupy',
-//             chessman: {
-//               color: chessman.color,
-//               idChessman: chessman.idChessman,
-//               nameChessman: chessman.nameChessman,
-//               move: true,
-//               image: chessman.image,
-//               point: chessman.point,
-//               availablePosition: [],
-//             }
-//           });
-//           continue;
-//         }
-
-//         if (i == startPosition[0] && j == startPosition[1]) {
-//           row.push({
-//             idKeyBoard: keyBoardNewInput[i][j].idKeyBoard,
-//             position: [startPosition[0], startPosition[1]],
-//             highlightPosition: 'normal',
-//             status: 'blank',
-//             chessman: null
-//           });
-//           continue;
-//         }
-//         else {
-//           let newObject = keyBoardNewInput[i][j];
-//           if (newObject.status == 'occupy') {
-//             newObject.chessman.availablePosition = [];
-//           }
-//           row.push(newObject);
-//         }
-//       }
-//       keyBoardLocal.push(row);
-//     }
-//     // keyBoardLocal = this.resetHighlightPosition([...keyBoardLocal]);
-
-//     // console.log("--------", keyBoardLocal)
-//     return keyBoardLocal;
-//   }
-
-// }

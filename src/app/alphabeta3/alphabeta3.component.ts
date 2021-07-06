@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import * as Var from './../common/variable';
 import * as Func from './../common/function';
+import { MyserviceService } from './../myservice.service';
 
 @Component({
-  selector: 'app-chess-normal',
-  templateUrl: './chess-normal.component.html',
-  styleUrls: ['./chess-normal.component.scss']
+  selector: 'app-alphabeta3',
+  templateUrl: './alphabeta3.component.html',
+  styleUrls: ['./alphabeta3.component.scss']
 })
-export class ChessNormalComponent implements OnInit {
+export class Alphabeta3Component implements OnInit {
   keyBoard = [];
+  keyBoardBackUp = [];
 
+  bestValue;
   chessmanWaiting: any;
 
   keyBoardDepth1 = [];
@@ -22,7 +25,7 @@ export class ChessNormalComponent implements OnInit {
   end_thinking
   time_thinking;
   keyBoardBestValueChange = [];
-
+  index = 0;
   constructor(
   ) {
     this.keyBoard = [...Var.keyBoard];
@@ -36,8 +39,9 @@ export class ChessNormalComponent implements OnInit {
   ngOnInit() {
     this.keyBoard = Func.resetHighlightPosition([...this.keyBoard]);
     // this.enemyMove(this.keyBoard)
-    console.log(Func.updateEnemy('black', this.keyBoard))
+    // console.log(Func.updateEnemy('black', this.keyBoard))
     // this.getPoint(this.keyBoard);
+    // console.log(this.keyBoard)
   }
 
   moveChessman(eachKeyboard) {
@@ -84,66 +88,43 @@ export class ChessNormalComponent implements OnInit {
     //khi mà ở bấm vào nút đang ở chế độ đồng minh hoặc là kẻ thù thì sẽ thay đổi vị trí quân cờ
     if (eachKeyboard.highlightPosition == 'ally' || eachKeyboard.highlightPosition == 'enemy') {
       if (eachKeyboard.idKeyBoard != this.chessmanWaiting.idKeyBoard) {
+
+        this.keyBoardBackUp = JSON.parse(JSON.stringify(this.keyBoard));
         this.thinking = true;
+        this.index = 0;
         this.start_thinking = window.performance.now();
-        // console.log(eachKeyboard);
-        // console.log(eachKeyboard.position);
 
-        //di chuyển chessmanWaiting sang vị trí mới trỏ
-        this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].highlightPosition = 'normal';
-        this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].status = 'occupy';
-        this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].chessman = this.chessmanWaiting['chessman'];
-        // console.log(this.keyBoard[i][j])
-        this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].chessman.move = true;
-        this.keyBoard[eachKeyboard.position[0]][eachKeyboard.position[1]].chessman.availablePosition = [];
+        // console.log(this.chessmanWaiting.position)
+        // console.log(eachKeyboard.position)
+        // console.log(this.chessmanWaiting.chessman)
 
-        this.keyBoard[this.chessmanWaiting.position[0]][this.chessmanWaiting.position[1]].highlightPosition = 'normal';
-        this.keyBoard[this.chessmanWaiting.position[0]][this.chessmanWaiting.position[1]].status = 'blank';
-        this.keyBoard[this.chessmanWaiting.position[0]][this.chessmanWaiting.position[1]].chessman = null;
+        this.keyBoard = this.enemyMoveEmulator(this.chessmanWaiting.position, eachKeyboard.position, this.chessmanWaiting.chessman, this.keyBoard)
 
-
-        let equal = Func.resetHighlightPosition(JSON.parse(JSON.stringify(this.keyBoard)));
-        this.keyBoard = Func.resetHighlightPosition(JSON.parse(JSON.stringify(equal)));
-
-        console.log("====================================Enemy==========================================")
-        // this.getPoint(this.keyBoard)
-        // console.log(this.keyBoard);
-        // this.enemy = this.updateEnemy('black', this.keyBoard);
-        // console.log(this.getPoint(this.keyBoard));
-
-        // console.log(this.chessService.keyBoard);
+        this.keyBoard = Func.resetHighlightPosition(JSON.parse(JSON.stringify(this.keyBoard)));
 
         setTimeout(() => {
-          this.enemyMove(equal);
+          this.enemyMove(this.keyBoard);
           this.thinking = false;
           this.end_thinking = window.performance.now();
-          this.time_thinking = this.end_thinking - this.start_thinking;
+          this.time_thinking = Math.round(this.end_thinking - this.start_thinking);
+          console.log("Thời gian chạy" + this.time_thinking)
         }, 0)
       }
     }
   }
 
   enemyMove(keyBoard) {
-
-    // console.log(keyBoard)
-
-    // this.getBestMove();
     this.keyBoardDepth1 = [];
     this.keyBoardDepth2 = [];
     this.keyBoardDepth3 = [];
     this.keyBoardDepth4 = [];
 
-    // console.log(this.keyBoard)
-    let bestValue = this.minimax(keyBoard, 4, 'max', 'black');
-    console.log("=======================================best value==================================")
-    console.log(bestValue);
-    // console.log(this.keyBoard)
-    // console.log(this.keyBoardDepth1)
-    // console.log(this.keyBoardDepth2)
-    // console.log(this.keyBoardDepth3)
+    this.bestValue = this.minimax(keyBoard, 4, 'max', 'black');
+    console.log("=======================best value=========================")
+    console.log("Giá trị tốt nhất: " + this.bestValue);
+    console.log("Số trường hợp đã xét: " + this.index)
     // console.log(this.keyBoardDepth4)
-
-    this.keyBoard = this.keyBoardDepth1['keyBoardDepth1']
+    this.keyBoard = Func.resetHighlightPosition(this.keyBoardDepth4['keyBoardDepth4'])
 
     let white = false;
     let black = false;
@@ -173,17 +154,15 @@ export class ChessNormalComponent implements OnInit {
   }
 
   minimax(keyBoard, depth, maximizingPlayer, color) {
-    // return 1
-    return (this.alphabeta([...keyBoard], depth, -10000, 10000, maximizingPlayer, color, { keyBoardDepth1: null, keyBoardDepth2: null, keyBoardDepth3: null, keyBoardDepth4: null, point: null }));
+    return (this.alphabeta(keyBoard, depth, -10000, 10000, maximizingPlayer, color, { keyBoardDepth1: null, keyBoardDepth2: null, keyBoardDepth3: null, keyBoardDepth4: null, point: null }));
   }
 
   alphabeta(keyBoard, depth, a, b, maximizingPlayer, color, father_keyBoard) {
 
     let movingOn = false;
-
     let keyBoardLocal = keyBoard;
     let enemy = Func.updateEnemy(color, keyBoard);
-    // console.log(enemy)
+
     for (let i = 0; i < enemy.length; i++) {
       if (enemy[i].availablePosition[0] != undefined) {
         movingOn = true;
@@ -191,37 +170,17 @@ export class ChessNormalComponent implements OnInit {
       }
     }
 
-    // console.log(keyBoardLocal)
-    // console.log(enemy)
-
-
-    // console.log(keyBoard, a, b, maximizingPlayer);
     if (depth == 0) {
-      //   console.log(depth)
-      //   console.log('keyBoard: ' + keyBoard);
-      // console.log(Func.getPoint(keyBoardLocal))
-
-      // console.log(Func.getPoint(keyBoardLocal));
-
+      this.index++;
       father_keyBoard.point = Func.getPoint(keyBoardLocal);
-      this.keyBoardBestValueChange = JSON.parse(JSON.stringify(father_keyBoard));
+      this.keyBoardBestValueChange = father_keyBoard
       return Func.getPoint(keyBoardLocal);
     }
 
-    // keyBoard = this.resetHighlightPosition([...keyBoard]);
-
-    // console.log(item_father)
-
-
     if (maximizingPlayer == 'max') {
-
       let case_alpha_beta = false;
-      // console.log(enemy)
-
       let keyBoardLocalMaxValue = []
       for (let i = 0; i < enemy.length; i++) {
-        // console.log(keyBoard);
-        // console.log(enemy)
         if (case_alpha_beta) {
           break;
         } else {
@@ -229,70 +188,52 @@ export class ChessNormalComponent implements OnInit {
             movingOn = true;
             for (let j = 0; j < enemy[i].availablePosition.length; j++) {
               let keyBoardValue = [];
-
-              // console.log("=======================================Keyboard Value==================================")
-              keyBoardValue = JSON.parse(JSON.stringify(Func.resetHighlightPosition(this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], keyBoardLocal))));
+              keyBoardValue = Func.resetHighlightPosition(this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], keyBoardLocal));
 
               if (depth == 4) {
-                father_keyBoard.keyBoardDepth1 = JSON.parse(JSON.stringify(keyBoardValue));
+                father_keyBoard.keyBoardDepth4 = Func.changeToString(keyBoardValue);
               }
 
               if (depth == 2) {
-                father_keyBoard.keyBoardDepth3 = JSON.parse(JSON.stringify(keyBoardValue));
+                father_keyBoard.keyBoardDepth2 = Func.changeToString(keyBoardValue);
               }
-              // console.log(keyBoardValue)            // thằng này không sai
-              // console.log(keyBoardLocal)            // sai ở thằng này đéo hiểu sao data lại bị thay đổi
-              // if (depth == 2) {
-              //   console.log('============================point depth 3==================================')
-              // }
-              a = Math.max(a, this.alphabeta(keyBoardValue, depth - 1, a, b, 'min', 'white', father_keyBoard));
-              // console.log('============================end depth 2==================================')
 
+              a = Math.max(a, this.alphabeta(keyBoardValue, depth - 1, a, b, 'min', 'white', father_keyBoard));
               if (a >= b) {
                 case_alpha_beta = true;
                 break;
               }
 
               if (depth == 4) {
-                if (a == this.keyBoardDepth2['point'] && keyBoardLocalMaxValue['point'] != this.keyBoardDepth2['point']) {
-                  keyBoardLocalMaxValue = JSON.parse(JSON.stringify(this.keyBoardDepth2));
+                if (a == this.keyBoardDepth3['point'] && keyBoardLocalMaxValue['point'] != this.keyBoardDepth3['point']) {
+                  keyBoardLocalMaxValue = JSON.parse(JSON.stringify(this.keyBoardDepth3));
                 }
               }
 
               if (depth == 2) {
-                if (a == this.keyBoardDepth4['point'] && keyBoardLocalMaxValue['point'] != this.keyBoardDepth4['point']) {
-                  keyBoardLocalMaxValue = JSON.parse(JSON.stringify(this.keyBoardDepth4));
+                if (a == this.keyBoardDepth1['point'] && keyBoardLocalMaxValue['point'] != this.keyBoardDepth1['point']) {
+                  keyBoardLocalMaxValue = JSON.parse(JSON.stringify(this.keyBoardDepth1));
                 }
               }
             }
           }
         }
       }
-      // console.log(keyBoardLocalMaxValue)
-
       if (case_alpha_beta == true) {
 
       } else {
         if (depth == 4) {
-          this.keyBoardDepth1 = keyBoardLocalMaxValue;
+          this.keyBoardDepth4 = keyBoardLocalMaxValue;
 
         }
         if (depth == 2) {
-          this.keyBoardDepth3 = keyBoardLocalMaxValue;
+          this.keyBoardDepth2 = keyBoardLocalMaxValue;
         }
       }
-      // console.log(this.keyBoardDepth1['keyBoardDepth1'])
       return a;
     } else {
-      // if (item_father.depth1 == 21) {
-      // console.log(keyBoard)
-      // console.log(enemy)
-      // }
       let case_alpha_beta = false;
-
       let keyBoardLocalMinValue = []
-      // console.log("min")
-      // console.log(enemy)
       for (let i = 0; i < enemy.length; i++) {
         if (case_alpha_beta) {
           break;
@@ -301,27 +242,23 @@ export class ChessNormalComponent implements OnInit {
             movingOn = true;
             for (let j = 0; j < enemy[i].availablePosition.length; j++) {
               let keyBoardValue = [];
-              keyBoardValue = JSON.parse(JSON.stringify(Func.resetHighlightPosition(this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], keyBoardLocal))));
-              // console.log(keyBoardDepth1)
-
+              keyBoardValue = Func.resetHighlightPosition(this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], keyBoardLocal));
               if (depth == 3) {
-                father_keyBoard.keyBoardDepth2 = JSON.parse(JSON.stringify(keyBoardValue));
+                father_keyBoard.keyBoardDepth3 = Func.changeToString(keyBoardValue);
               }
 
               if (depth == 1) {
-                father_keyBoard.keyBoardDepth4 = JSON.parse(JSON.stringify(keyBoardValue));
+                father_keyBoard.keyBoardDepth1 = Func.changeToString(keyBoardValue);
               }
-
               b = Math.min(b, this.alphabeta(keyBoardValue, depth - 1, a, b, 'max', 'black', father_keyBoard));
-
               if (a >= b) {
                 case_alpha_beta = true;
                 break;
               }
 
-              if(depth == 3){
-                if (b == this.keyBoardDepth3['point'] && keyBoardLocalMinValue['point'] != this.keyBoardDepth3['point']) {
-                  keyBoardLocalMinValue = JSON.parse(JSON.stringify(this.keyBoardDepth3));
+              if (depth == 3) {
+                if (b == this.keyBoardDepth2['point'] && keyBoardLocalMinValue['point'] != this.keyBoardDepth2['point']) {
+                  keyBoardLocalMinValue = JSON.parse(JSON.stringify(this.keyBoardDepth2));
                 }
               }
 
@@ -330,22 +267,20 @@ export class ChessNormalComponent implements OnInit {
                   keyBoardLocalMinValue = JSON.parse(JSON.stringify(this.keyBoardBestValueChange));
                 }
               }
-
             }
           }
         }
       }
-      // console.log(keyBoardLocalMinValue)
       if (case_alpha_beta == true) {
 
       } else {
 
         if (depth == 3) {
-          this.keyBoardDepth2 = keyBoardLocalMinValue;
+          this.keyBoardDepth3 = keyBoardLocalMinValue;
         }
 
         if (depth == 1) {
-          this.keyBoardDepth4 = keyBoardLocalMinValue;
+          this.keyBoardDepth1 = keyBoardLocalMinValue;
         }
 
       }
@@ -355,17 +290,20 @@ export class ChessNormalComponent implements OnInit {
 
 
   enemyMoveEmulator(startPosition, endPosition, chessman, keyBoardInput) {
-    // console.log([endPosition[0]],[endPosition[1]]);
-    // console.log(keyBoard[start][end])
+    // console.log(chessman)
 
-    // console.log(startPosition)
-    // console.log(endPosition)
-    let keyBoardNewInput = JSON.parse(JSON.stringify(keyBoardInput));
-    let keyBoardLocal = JSON.parse(JSON.stringify(keyBoardInput));
-    // console.log(keyBoardLocal)
+    let keyBoardLocal = []
+
+    for (let i = 0; i < 8; i++) {
+      let row = []
+      for (let j = 0; j < 8; j++) {
+        row.push(keyBoardInput[i][j])
+      }
+      keyBoardLocal.push(row);
+    }
 
     keyBoardLocal[endPosition[0]][endPosition[1]] = {
-      idKeyBoard: keyBoardNewInput[endPosition[0]][endPosition[1]].idKeyBoard,
+      idKeyBoard: keyBoardInput[endPosition[0]][endPosition[1]].idKeyBoard,
       position: [endPosition[0], endPosition[1]],
       highlightPosition: 'normal',
       status: 'occupy',
@@ -382,17 +320,67 @@ export class ChessNormalComponent implements OnInit {
     }
 
     keyBoardLocal[startPosition[0]][startPosition[1]] = {
-      idKeyBoard: keyBoardNewInput[startPosition[0]][startPosition[1]].idKeyBoard,
+      idKeyBoard: keyBoardInput[startPosition[0]][startPosition[1]].idKeyBoard,
       position: [startPosition[0], startPosition[1]],
       highlightPosition: 'normal',
       status: 'blank',
       chessman: null
     }
-    // keyBoardLocal = this.resetHighlightPosition([...keyBoardLocal]);
 
-    // console.log("--------", keyBoardLocal)
+    if (chessman.nameChessman == 'king') {
+      if (endPosition[1] == startPosition[1] + 2) {
+        keyBoardLocal = this.enemyMoveEmulator([startPosition[0], startPosition[1] + 3], [endPosition[0], endPosition[1] - 1], keyBoardLocal[startPosition[0]][startPosition[1] + 3].chessman, keyBoardLocal)
+      }
+    }
+
+    if (chessman.nameChessman == 'king') {
+      if (endPosition[1] == startPosition[1] - 2) {
+        keyBoardLocal = this.enemyMoveEmulator([startPosition[0], startPosition[1] - 4], [endPosition[0], endPosition[1] + 1], keyBoardLocal[startPosition[0]][startPosition[1] - 4].chessman, keyBoardLocal)
+      }
+    }
+
+    if (chessman.nameChessman == 'pawn') {
+      if (chessman.color == 'black') {
+        if (endPosition[0] == 7) {
+          keyBoardLocal[endPosition[0]][endPosition[1]].chessman = {
+            color: 'black',
+            idChessman: 50,
+            nameChessman: 'queen',
+            move: true,
+            image: 'bQ.png',
+            point: 90,
+            point_bonus: 0,
+            availablePosition: [],
+          }
+        }
+      }
+
+      if (chessman.color == 'white') {
+        if (endPosition[0] == 0) {
+          keyBoardLocal[endPosition[0]][endPosition[1]].chessman = {
+            color: 'white',
+            idChessman: 50,
+            nameChessman: 'queen',
+            move: true,
+            image: 'wQ.png',
+            point: 90,
+            point_bonus: 0,
+            availablePosition: [],
+          }
+        }
+      }
+    }
+
     return keyBoardLocal;
   }
 
-}
 
+  reset() {
+    this.keyBoard = [...Var.keyBoard];
+  }
+
+  undo() {
+    this.keyBoard = this.keyBoardBackUp;
+  }
+
+}

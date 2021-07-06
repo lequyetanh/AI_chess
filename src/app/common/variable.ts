@@ -11,6 +11,7 @@ export let keyBoard = [
       move: false,
       image: 'bR.png',
       point: 50,
+      point_bonus: 0,
       availablePosition: []
     }
   },
@@ -26,6 +27,7 @@ export let keyBoard = [
       move: false,
       image: 'bN.png',
       point: 30,
+      point_bonus: 0,
       availablePosition: []
     }
   },
@@ -41,6 +43,7 @@ export let keyBoard = [
       move: false,
       image: 'bB.png',
       point: 30,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -56,6 +59,7 @@ export let keyBoard = [
       move: false,
       image: 'bQ.png',
       point: 90,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -71,6 +75,7 @@ export let keyBoard = [
       move: false,
       image: 'bK.png',
       point: 900,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -86,6 +91,7 @@ export let keyBoard = [
       move: false,
       image: 'bB.png',
       point: 30,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -101,6 +107,7 @@ export let keyBoard = [
       move: false,
       image: 'bN.png',
       point: 30,
+      point_bonus: 0,
       availablePosition: []
     }
   },
@@ -116,6 +123,7 @@ export let keyBoard = [
       move: false,
       image: 'bR.png',
       point: 50,
+      point_bonus: 0,
       availablePosition: []
     }
   },
@@ -132,6 +140,7 @@ export let keyBoard = [
       move: false,
       image: 'bP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -147,6 +156,7 @@ export let keyBoard = [
       move: false,
       image: 'bP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -162,6 +172,7 @@ export let keyBoard = [
       move: false,
       image: 'bP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -177,6 +188,7 @@ export let keyBoard = [
       move: false,
       image: 'bP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -192,6 +204,7 @@ export let keyBoard = [
       move: false,
       image: 'bP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -207,6 +220,7 @@ export let keyBoard = [
       move: false,
       image: 'bP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -222,6 +236,7 @@ export let keyBoard = [
       move: false,
       image: 'bP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -237,6 +252,7 @@ export let keyBoard = [
       move: false,
       image: 'bP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -481,6 +497,7 @@ export let keyBoard = [
       move: false,
       image: 'wP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -496,6 +513,7 @@ export let keyBoard = [
       move: false,
       image: 'wP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -511,6 +529,7 @@ export let keyBoard = [
       move: false,
       image: 'wP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -526,6 +545,7 @@ export let keyBoard = [
       move: false,
       image: 'wP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -541,6 +561,7 @@ export let keyBoard = [
       move: false,
       image: 'wP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -556,6 +577,7 @@ export let keyBoard = [
       move: false,
       image: 'wP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -571,6 +593,7 @@ export let keyBoard = [
       move: false,
       image: 'wP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -586,6 +609,7 @@ export let keyBoard = [
       move: false,
       image: 'wP.png',
       point: 10,
+      point_bonus: 0,
       availablePosition: []
     },
   },
@@ -604,6 +628,7 @@ export let keyBoard = [
         move: false,
         image: 'wR.png',
         point: 50,
+        point_bonus: 0,
         availablePosition: []
       }
     },
@@ -619,6 +644,7 @@ export let keyBoard = [
         move: false,
         image: 'wN.png',
         point: 30,
+        point_bonus: 0,
         availablePosition: []
       }
     },
@@ -634,6 +660,7 @@ export let keyBoard = [
         move: false,
         image: 'wB.png',
         point: 30,
+        point_bonus: 0,
         availablePosition: []
       },
     },
@@ -649,6 +676,7 @@ export let keyBoard = [
         move: false,
         image: 'wQ.png',
         point: 90,
+        point_bonus: 0,
         availablePosition: []
       },
     },
@@ -664,6 +692,7 @@ export let keyBoard = [
         move: false,
         image: 'wK.png',
         point: 900,
+        point_bonus: 0,
         availablePosition: []
       },
     },
@@ -679,6 +708,7 @@ export let keyBoard = [
         move: false,
         image: 'wB.png',
         point: 30,
+        point_bonus: 0,
         availablePosition: []
       },
     },
@@ -694,6 +724,7 @@ export let keyBoard = [
         move: false,
         image: 'wN.png',
         point: 30,
+        point_bonus: 0,
         availablePosition: []
       }
     },
@@ -709,11 +740,17 @@ export let keyBoard = [
         move: false,
         image: 'wR.png',
         point: 50,
+        point_bonus: 0,
         availablePosition: []
       }
     },
   ]
 ];
+
+
+
+
+
 export const pawnEvalWhite = [
   [+0.0, +0.0, +0.0, +0.0, +0.0, +0.0, +0.0, +0.0],
   [+5.0, +5.0, +5.0, +5.0, +5.0, +5.0, +5.0, +5.0],
@@ -725,16 +762,6 @@ export const pawnEvalWhite = [
   [+0.0, +0.0, +0.0, +0.0, +0.0, +0.0, +0.0, +0.0],
 ];
 
-export const knightEval = [
-  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
-  [-4.0, -2.0, +0.0, +0.0, +0.0, +0.0, -2.0, -4.0],
-  [-3.0, +0.0, +1.0, +1.5, +1.5, +1.0, +0.0, -3.0],
-  [-3.0, +0.5, +1.5, +2.0, +2.0, +1.5, +0.5, -3.0],
-  [-3.0, +0.0, +1.5, +2.0, +2.0, +1.5, +0.0, -3.0],
-  [-3.0, +0.5, +1.0, +1.5, +1.5, +1.0, +0.5, -3.0],
-  [-4.0, -2.0, +0.0, +0.5, +0.5, +0.0, -2.0, -4.0],
-  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
-];
 export const bishopEvalWhite = [
   [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
   [-1.0, +0.0, +0.0, +0.0, +0.0, +0.0, +0.0, -1.0],
@@ -776,6 +803,18 @@ export const kingEvalWhite = [
   [+2.0, +2.0, +0.0, +0.0, +0.0, +0.0, +2.0, +2.0],
   [+2.0, +3.0, +1.0, +0.0, +0.0, +1.0, +3.0, +2.0],
 ];
+
+
+export const knightEval = [
+  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
+  [-4.0, -2.0, +0.0, +0.0, +0.0, +0.0, -2.0, -4.0],
+  [-3.0, +0.0, +1.0, +1.5, +1.5, +1.0, +0.0, -3.0],
+  [-3.0, +0.5, +1.5, +2.0, +2.0, +1.5, +0.5, -3.0],
+  [-3.0, +0.0, +1.5, +2.0, +2.0, +1.5, +0.0, -3.0],
+  [-3.0, +0.5, +1.0, +1.5, +1.5, +1.0, +0.5, -3.0],
+  [-4.0, -2.0, +0.0, +0.5, +0.5, +0.0, -2.0, -4.0],
+  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
+];
 export const pawnEvalBlack = [
   [+0.0, +0.0, +0.0, +0.0, +0.0, +0.0, +0.0, +0.0],
   [+0.5, +1.0, +1.0, -2.0, -2.0, +1.0, +1.0, +0.5],
@@ -786,6 +825,8 @@ export const pawnEvalBlack = [
   [+5.0, +5.0, +5.0, +5.0, +5.0, +5.0, +5.0, +5.0],
   [+0.0, +0.0, +0.0, +0.0, +0.0, +0.0, +0.0, +0.0],
 ];
+
+
 export const rookEvalBlack = [
   [+0.0, +0.0, +0.0, +0.5, +0.5, +0.0, +0.0, +0.0],
   [-0.5, +0.0, +0.0, +0.0, +0.0, +0.0, +0.0, -0.5],

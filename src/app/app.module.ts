@@ -8,7 +8,10 @@ import { ChessMinimaxComponent } from './chess-minimax/chess-minimax.component';
 import { TestComponent } from './test/test.component';
 import { MinimaxComponent } from './minimax/minimax.component';
 import { BruceForceComponent } from './bruce-force/bruce-force.component';
-
+import { AngularTestComponent } from './angular-test/angular-test.component';
+import { Alphabeta3Component } from './alphabeta3/alphabeta3.component';
+import { Alphabeta4Component } from './alphabeta4/alphabeta4.component';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -17,11 +20,15 @@ import { BruceForceComponent } from './bruce-force/bruce-force.component';
     ChessMinimaxComponent,
     TestComponent,
     MinimaxComponent,
-    BruceForceComponent
+    BruceForceComponent,
+    AngularTestComponent,
+    Alphabeta3Component,
+    Alphabeta4Component
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
   providers: [
 

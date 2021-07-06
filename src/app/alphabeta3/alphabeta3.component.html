@@ -6,8 +6,12 @@
 
 <div class="time_thinking">
   <div class="">
-    <p>Thời gian suy nghĩ:</p>
-    <p> {{time_thinking}} (ms)</p>
+    <p>Thời gian suy nghĩ: {{time_thinking}} (ms)</p>
+    <p>Giá trị tốt nhất: {{bestValue}}</p>
+    <p>Số trường hợp đã xét: {{index}}</p>
+    <button class="button" (click)="undo()">Quay Lại</button>
+    <br/>
+    <button class="button" (click)="reset()">Chơi Lại Từ Đầu</button>
   </div>
 </div>
 

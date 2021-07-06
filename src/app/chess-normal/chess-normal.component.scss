@@ -64,3 +64,18 @@
 	align-items:flex-start !important;
 	justify-content:flex-start !important;
 }
+
+.spinner{
+  color: white;
+  position: fixed;
+  top: 50px;
+  right: 460px;
+  // transform: translate(-50%, 0);
+}
+
+.time_thinking{
+  color: white;
+  position: fixed;
+  top: 120px;
+  left: 1250px;
+}
