@@ -11,6 +11,7 @@ import { MyserviceService } from './../myservice.service';
 export class Alphabeta3Component implements OnInit {
   keyBoard = [];
   keyBoardBackUp = [];
+  specialKeyBoard = null;
 
   bestValue;
   chessmanWaiting: any;
@@ -126,6 +127,11 @@ export class Alphabeta3Component implements OnInit {
     // console.log(this.keyBoardDepth4)
     this.keyBoard = Func.resetHighlightPosition(this.keyBoardDepth4['keyBoardDepth4'])
 
+    if (this.specialKeyBoard) {
+      this.keyBoard = this.specialKeyBoard;
+      this.specialKeyBoard = null;
+    }
+
     let white = false;
     let black = false;
 
@@ -198,6 +204,27 @@ export class Alphabeta3Component implements OnInit {
                 father_keyBoard.keyBoardDepth2 = Func.changeToString(keyBoardValue);
               }
 
+              // check xem nếu đen ăn trắng thì ...
+              let white = false;
+              for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                  if (keyBoardValue[i][j].chessman) {
+                    if (keyBoardValue[i][j].chessman.nameChessman == 'king') {
+                      if (keyBoardValue[i][j].chessman.color == 'white') {
+                        white = true;
+                      }
+                    }
+                  }
+                }
+              }
+
+              if (!white) {
+                this.specialKeyBoard = father_keyBoard.keyBoardDepth4;
+                break;
+              }
+
+              // ===========================================================
+
               a = Math.max(a, this.alphabeta(keyBoardValue, depth - 1, a, b, 'min', 'white', father_keyBoard));
               if (a >= b) {
                 case_alpha_beta = true;
@@ -243,6 +270,7 @@ export class Alphabeta3Component implements OnInit {
             for (let j = 0; j < enemy[i].availablePosition.length; j++) {
               let keyBoardValue = [];
               keyBoardValue = Func.resetHighlightPosition(this.enemyMoveEmulator(enemy[i].position, enemy[i].availablePosition[j].position, enemy[i], keyBoardLocal));
+
               if (depth == 3) {
                 father_keyBoard.keyBoardDepth3 = Func.changeToString(keyBoardValue);
               }
@@ -250,6 +278,39 @@ export class Alphabeta3Component implements OnInit {
               if (depth == 1) {
                 father_keyBoard.keyBoardDepth1 = Func.changeToString(keyBoardValue);
               }
+
+              // check xem nếu trắng ăn đen thì ...
+              let black = false;
+              for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                  if (keyBoardValue[i][j].chessman) {
+                    if (keyBoardValue[i][j].chessman.nameChessman == 'king') {
+                      if (keyBoardValue[i][j].chessman.color == 'black') {
+                        black = true;
+                      }
+                    }
+                  }
+                }
+              }
+
+              if (!black) {
+                if (depth == 3) {
+                  if (b <= Func.getPoint(keyBoardValue)) {
+                    keyBoardLocalMinValue = JSON.parse(JSON.stringify(this.keyBoardDepth2));
+                  }
+                }
+
+                // nếu giá trị của keyBoard này = giá trị của b và
+                if (depth == 1) {
+                  if (b <= Func.getPoint(keyBoardValue)) {
+                    keyBoardLocalMinValue = JSON.parse(JSON.stringify(this.keyBoardBestValueChange));
+                  }
+                }
+                continue;
+              }
+
+              // check xem nếu tướng trắng bị ăn => return 10000;
+
               b = Math.min(b, this.alphabeta(keyBoardValue, depth - 1, a, b, 'max', 'black', father_keyBoard));
               if (a >= b) {
                 case_alpha_beta = true;
@@ -262,6 +323,7 @@ export class Alphabeta3Component implements OnInit {
                 }
               }
 
+              // nếu giá trị của keyBoard này = giá trị của b và
               if (depth == 1) {
                 if (b == this.keyBoardBestValueChange['point'] && keyBoardLocalMinValue['point'] != this.keyBoardBestValueChange['point']) {
                   keyBoardLocalMinValue = JSON.parse(JSON.stringify(this.keyBoardBestValueChange));
