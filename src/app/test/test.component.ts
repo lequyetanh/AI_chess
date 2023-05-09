@@ -22,6 +22,8 @@ export class TestComponent implements OnInit {
     position: [0, 10],
     point: 0.12345
   }
+
+  newenergy = 0;
   score = 0;
 
   constructor() {
