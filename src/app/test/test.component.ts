@@ -20,8 +20,9 @@ export class TestComponent implements OnInit {
   timerId: any;
   energy: any = {
     position: [0, 10],
-    point: 0.12345
   }
+
+  newenergy = 0;
   score = 0;
 
   constructor() {
