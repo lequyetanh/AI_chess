@@ -11,11 +11,17 @@ export class MyserviceService {
   keyBoard: any;
   keyBoardBackUp: any;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    console.log('hello mother fucker')
+  }
 
-  postKeyBoard(keyBoard){
+  postKeyBoard(keyBoard) {
     let url = `${this.keyBoardURL}/post`;
     // console.log(keyBoard);
     return this.http.post(url, keyBoard);
-}
+  }
+
+  printHello(){
+    console.log("hello world")
+  }
 }

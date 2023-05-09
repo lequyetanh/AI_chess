@@ -12,7 +12,7 @@ import { AngularTestComponent } from './angular-test/angular-test.component';
 import { Alphabeta3Component } from './alphabeta3/alphabeta3.component';
 import { Alphabeta4Component } from './alphabeta4/alphabeta4.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-
+import { MyserviceService } from './myservice.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,12 +26,12 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
     Alphabeta4Component
   ],
   imports: [
-    BrowserModule,
+  BrowserModule,
     AppRoutingModule,
     HttpClientModule,
   ],
   providers: [
-
+    // MyserviceService
   ],
   bootstrap: [AppComponent]
 })

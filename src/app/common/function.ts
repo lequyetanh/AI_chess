@@ -338,40 +338,40 @@ export function getAvailablePosition(currentPosition, nameChessman, color, keyBo
       }
     }
     // console.log(keyBoard)
-    if (keyBoard[currentPosition[0]][currentPosition[1]].chessman.move == false) {
-      if (
-        keyBoard[currentPosition[0]][currentPosition[1] + 1].chessman == null &&
-        keyBoard[currentPosition[0]][currentPosition[1] + 2].chessman == null
-      ) {
-        if (keyBoard[currentPosition[0]][currentPosition[1] + 3].chessman) {
-          if (keyBoard[currentPosition[0]][currentPosition[1] + 3].chessman.nameChessman == 'castle' && keyBoard[currentPosition[0]][currentPosition[1] + 3].chessman.move == false) {
-            arrayAvailablePosition.push({
-              idKeyBoard: keyBoard[currentPosition[0]][currentPosition[1] + 2].idKeyBoard,
-              position: [currentPosition[0], currentPosition[1] + 2],
-              status: 'blank',
-            })
-          }
-        }
-      }
-    }
+    // if (keyBoard[currentPosition[0]][currentPosition[1]].chessman.move == false) {
+    //   if (
+    //     keyBoard[currentPosition[0]][currentPosition[1] + 1].chessman == null &&
+    //     keyBoard[currentPosition[0]][currentPosition[1] + 2].chessman == null
+    //   ) {
+    //     if (keyBoard[currentPosition[0]][currentPosition[1] + 3].chessman) {
+    //       if (keyBoard[currentPosition[0]][currentPosition[1] + 3].chessman.nameChessman == 'castle' && keyBoard[currentPosition[0]][currentPosition[1] + 3].chessman.move == false) {
+    //         arrayAvailablePosition.push({
+    //           idKeyBoard: keyBoard[currentPosition[0]][currentPosition[1] + 2].idKeyBoard,
+    //           position: [currentPosition[0], currentPosition[1] + 2],
+    //           status: 'blank',
+    //         })
+    //       }
+    //     }
+    //   }
+    // }
 
-    if (keyBoard[currentPosition[0]][currentPosition[1]].chessman.move == false) {
-      if (
-        keyBoard[currentPosition[0]][currentPosition[1] - 1].chessman == null &&
-        keyBoard[currentPosition[0]][currentPosition[1] - 2].chessman == null &&
-        keyBoard[currentPosition[0]][currentPosition[1] - 3].chessman == null
-      ) {
-        if (keyBoard[currentPosition[0]][currentPosition[1] - 4].chessman) {
-          if (keyBoard[currentPosition[0]][currentPosition[1] - 4].chessman.nameChessman == 'castle' && keyBoard[currentPosition[0]][currentPosition[1] - 4].chessman.move == false) {
-            arrayAvailablePosition.push({
-              idKeyBoard: keyBoard[currentPosition[0]][currentPosition[1] - 2].idKeyBoard,
-              position: [currentPosition[0], currentPosition[1] - 2],
-              status: 'blank',
-            })
-          }
-        }
-      }
-    }
+    // if (keyBoard[currentPosition[0]][currentPosition[1]].chessman.move == false) {
+    //   if (
+    //     keyBoard[currentPosition[0]][currentPosition[1] - 1].chessman == null &&
+    //     keyBoard[currentPosition[0]][currentPosition[1] - 2].chessman == null &&
+    //     keyBoard[currentPosition[0]][currentPosition[1] - 3].chessman == null
+    //   ) {
+    //     if (keyBoard[currentPosition[0]][currentPosition[1] - 4].chessman) {
+    //       if (keyBoard[currentPosition[0]][currentPosition[1] - 4].chessman.nameChessman == 'castle' && keyBoard[currentPosition[0]][currentPosition[1] - 4].chessman.move == false) {
+    //         arrayAvailablePosition.push({
+    //           idKeyBoard: keyBoard[currentPosition[0]][currentPosition[1] - 2].idKeyBoard,
+    //           position: [currentPosition[0], currentPosition[1] - 2],
+    //           status: 'blank',
+    //         })
+    //       }
+    //     }
+    //   }
+    // }
 
   }
 

@@ -292,8 +292,10 @@ export class ChessMinimaxComponent implements OnInit {
               //   break;
               // }
 
+              // nếu mà ko bị cắt tỉa thì chạy cái này
               if (depth == 1) {
                 if (a == this.keyBoardBestValueChange['point'] && keyBoardLocalMaxValue['point'] != this.keyBoardBestValueChange['point']) {
+                  // lấy ra giá trị lớn nhất
                   keyBoardLocalMaxValue = JSON.parse(JSON.stringify(this.keyBoardBestValueChange));
                 }
               }
@@ -309,6 +311,7 @@ export class ChessMinimaxComponent implements OnInit {
       }
       // console.log(keyBoardLocalMaxValue)
 
+      // nếu mà bị cắt tỉa
       if (case_alpha_beta == true) {
 
       } else {
@@ -345,11 +348,6 @@ export class ChessMinimaxComponent implements OnInit {
 
               if (depth == 2) {
                 father_keyBoard.keyBoardDepth2 = JSON.parse(JSON.stringify(keyBoardValue));
-              }
-
-              if (depth == 2) {
-                // console.log('============================point depth 2==================================')
-                // console.log("index: " + this.index++)
               }
 
               b = Math.min(b, this.alphabeta(keyBoardValue, depth - 1, a, b, 'max', 'black', father_keyBoard));

@@ -3,19 +3,76 @@ export let keyBoard = [
     idKeyBoard: 1,
     position: [0, 0],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null
+    status: 'occupy',
+    chessman: {
+      color: 'black',
+      idChessman: 1,
+      nameChessman: 'castle',
+      move: false,
+      image: 'bR.png',
+      point: 50,
+      point_bonus: 0,
+      availablePosition: []
+    }
   },
   {
     idKeyBoard: 2,
     position: [0, 1],
+    highlightPosition: 'normal',
+    status: 'occupy',
+    chessman: {
+      color: 'black',
+      idChessman: 2,
+      nameChessman: 'knight',
+      move: false,
+      image: 'bN.png',
+      point: 30,
+      point_bonus: 0,
+      availablePosition: []
+    }
+  },
+  {
+    idKeyBoard: 3,
+    position: [0, 2],
     highlightPosition: 'normal', //normal, ally, enemy
     status: 'occupy', //occupy, blank
     chessman: {
       color: 'black',
+      idChessman: 3,
+      nameChessman: 'bishop',
+      move: false,
+      image: 'bB.png',
+      point: 30,
+      point_bonus: 0,
+      availablePosition: []
+    },
+  },
+  {
+    idKeyBoard: 4,
+    position: [0, 3],
+    highlightPosition: 'normal',
+    status: 'occupy',
+    chessman: {
+      color: 'black',
+      idChessman: 4,
+      nameChessman: 'queen',
+      move: false,
+      image: 'bQ.png',
+      point: 90,
+      point_bonus: 0,
+      availablePosition: []
+    },
+  },
+  {
+    idKeyBoard: 5,
+    position: [0, 4],
+    highlightPosition: 'normal',
+    status: 'occupy',
+    chessman: {
+      color: 'black',
       idChessman: 5,
       nameChessman: 'king',
-      move: true,
+      move: false,
       image: 'bK.png',
       point: 900,
       point_bonus: 0,
@@ -23,54 +80,69 @@ export let keyBoard = [
     },
   },
   {
-    idKeyBoard: 3,
-    position: [0, 2],
-    highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null
-  },
-  {
-    idKeyBoard: 4,
-    position: [0, 3],
-    highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null,
-  },
-  {
-    idKeyBoard: 5,
-    position: [0, 4],
-    highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null
-  },
-  {
     idKeyBoard: 6,
     position: [0, 5],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null
+    status: 'occupy',
+    chessman: {
+      color: 'black',
+      idChessman: 6,
+      nameChessman: 'bishop',
+      move: false,
+      image: 'bB.png',
+      point: 30,
+      point_bonus: 0,
+      availablePosition: []
+    },
   },
   {
     idKeyBoard: 7,
     position: [0, 6],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null
+    status: 'occupy',
+    chessman: {
+      color: 'black',
+      idChessman: 7,
+      nameChessman: 'knight',
+      move: false,
+      image: 'bN.png',
+      point: 30,
+      point_bonus: 0,
+      availablePosition: []
+    }
   },
   {
     idKeyBoard: 8,
     position: [0, 7],
     highlightPosition: 'normal',
-    status: 'blank',
-
+    status: 'occupy',
+    chessman: {
+      color: 'black',
+      idChessman: 8,
+      nameChessman: 'castle',
+      move: false,
+      image: 'bR.png',
+      point: 50,
+      point_bonus: 0,
+      availablePosition: []
+    }
   },
   ],
   [{
     idKeyBoard: 9,
     position: [1, 0],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null,
+    status: 'occupy',
+    chessman: {
+      color: 'black',
+      idChessman: 9,
+      nameChessman: 'pawn',
+      move: false,
+      image: 'bP.png',
+      point: 10,
+      point_bonus: 0,
+      availablePosition: []
+    },
   },
   {
     idKeyBoard: 10,
@@ -108,15 +180,33 @@ export let keyBoard = [
     idKeyBoard: 12,
     position: [1, 3],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null,
+    status: 'occupy',
+    chessman: {
+      color: 'black',
+      idChessman: 12,
+      nameChessman: 'pawn',
+      move: false,
+      image: 'bP.png',
+      point: 10,
+      point_bonus: 0,
+      availablePosition: []
+    },
   },
   {
     idKeyBoard: 13,
     position: [1, 4],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null,
+    status: 'occupy',
+    chessman: {
+      color: 'black',
+      idChessman: 13,
+      nameChessman: 'pawn',
+      move: false,
+      image: 'bP.png',
+      point: 10,
+      point_bonus: 0,
+      availablePosition: []
+    },
   },
   {
     idKeyBoard: 14,
@@ -125,11 +215,11 @@ export let keyBoard = [
     status: 'occupy',
     chessman: {
       color: 'black',
-      idChessman: 3,
-      nameChessman: 'bishop',
+      idChessman: 14,
+      nameChessman: 'pawn',
       move: false,
-      image: 'bB.png',
-      point: 30,
+      image: 'bP.png',
+      point: 10,
       point_bonus: 0,
       availablePosition: []
     },
@@ -138,8 +228,17 @@ export let keyBoard = [
     idKeyBoard: 15,
     position: [1, 6],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null,
+    status: 'occupy',
+    chessman: {
+      color: 'black',
+      idChessman: 15,
+      nameChessman: 'pawn',
+      move: false,
+      image: 'bP.png',
+      point: 10,
+      point_bonus: 0,
+      availablePosition: []
+    },
   },
   {
     idKeyBoard: 16,
@@ -184,7 +283,7 @@ export let keyBoard = [
     position: [2, 3],
     highlightPosition: 'normal',
     status: 'blank',
-    chessman: null
+    chessman: null,
   },
   {
     idKeyBoard: 21,
@@ -233,17 +332,8 @@ export let keyBoard = [
     idKeyBoard: 27,
     position: [3, 2],
     highlightPosition: 'normal',
-    status: 'occupy',
-    chessman: {
-      color: 'black', //black, white
-      idChessman: 2,
-      nameChessman: 'knight',
-      move: false,
-      image: 'bN.png',
-      point: 30,
-      point_bonus: 0,
-      availablePosition: []
-    },
+    status: 'blank',
+    chessman: null,
   },
   {
     idKeyBoard: 28,
@@ -313,17 +403,8 @@ export let keyBoard = [
     idKeyBoard: 37,
     position: [4, 4],
     highlightPosition: 'normal',
-    status: 'occupy',
-    chessman: {
-      color: 'white',
-      idChessman: 21,
-      nameChessman: 'pawn',
-      move: true,
-      image: 'wP.png',
-      point: 10,
-      point_bonus: 0,
-      availablePosition: []
-    }
+    status: 'blank',
+    chessman: null,
   },
   {
     idKeyBoard: 38,
@@ -358,17 +439,8 @@ export let keyBoard = [
     idKeyBoard: 42,
     position: [5, 1],
     highlightPosition: 'normal',
-    status: 'occupy',
-    chessman: {
-      color: 'white',
-      idChessman: 17,
-      nameChessman: 'pawn',
-      move: false,
-      image: 'wP.png',
-      point: 10,
-      point_bonus: 0,
-      availablePosition: []
-    },
+    status: 'blank',
+    chessman: null,
   },
   {
     idKeyBoard: 43,
@@ -409,32 +481,41 @@ export let keyBoard = [
     idKeyBoard: 48,
     position: [5, 7],
     highlightPosition: 'normal',
-    status: 'occupy',
-    chessman: {
-      color: 'white',
-      idChessman: 23,
-      nameChessman: 'knight',
-      move: false,
-      image: 'wN.png',
-      point: 30,
-      point_bonus: 0,
-      availablePosition: []
-    },
+    status: 'blank',
+    chessman: null,
   }
   ],
   [{
     idKeyBoard: 49,
     position: [6, 0],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null,
+    status: 'occupy',
+    chessman: {
+      color: 'white',
+      idChessman: 17,
+      nameChessman: 'pawn',
+      move: false,
+      image: 'wP.png',
+      point: 10,
+      point_bonus: 0,
+      availablePosition: []
+    },
   },
   {
     idKeyBoard: 50,
     position: [6, 1],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null,
+    status: 'occupy',
+    chessman: {
+      color: 'white',
+      idChessman: 18,
+      nameChessman: 'pawn',
+      move: false,
+      image: 'wP.png',
+      point: 10,
+      point_bonus: 0,
+      availablePosition: []
+    },
   },
   {
     idKeyBoard: 51,
@@ -443,11 +524,11 @@ export let keyBoard = [
     status: 'occupy',
     chessman: {
       color: 'white',
-      idChessman: 22,
-      nameChessman: 'bishop',
+      idChessman: 19,
+      nameChessman: 'pawn',
       move: false,
-      image: 'wB.png',
-      point: 30,
+      image: 'wP.png',
+      point: 10,
       point_bonus: 0,
       availablePosition: []
     },
@@ -456,22 +537,49 @@ export let keyBoard = [
     idKeyBoard: 52,
     position: [6, 3],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null,
+    status: 'occupy',
+    chessman: {
+      color: 'white',
+      idChessman: 20,
+      nameChessman: 'pawn',
+      move: false,
+      image: 'wP.png',
+      point: 10,
+      point_bonus: 0,
+      availablePosition: []
+    },
   },
   {
     idKeyBoard: 53,
     position: [6, 4],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null,
+    status: 'occupy',
+    chessman: {
+      color: 'white',
+      idChessman: 21,
+      nameChessman: 'pawn',
+      move: false,
+      image: 'wP.png',
+      point: 10,
+      point_bonus: 0,
+      availablePosition: []
+    },
   },
   {
     idKeyBoard: 54,
     position: [6, 5],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null,
+    status: 'occupy',
+    chessman: {
+      color: 'white',
+      idChessman: 22,
+      nameChessman: 'pawn',
+      move: false,
+      image: 'wP.png',
+      point: 10,
+      point_bonus: 0,
+      availablePosition: []
+    },
   },
   {
     idKeyBoard: 55,
@@ -480,7 +588,7 @@ export let keyBoard = [
     status: 'occupy',
     chessman: {
       color: 'white',
-      idChessman: 31,
+      idChessman: 23,
       nameChessman: 'pawn',
       move: false,
       image: 'wP.png',
@@ -493,8 +601,17 @@ export let keyBoard = [
     idKeyBoard: 56,
     position: [6, 7],
     highlightPosition: 'normal',
-    status: 'blank',
-    chessman: null,
+    status: 'occupy',
+    chessman: {
+      color: 'white',
+      idChessman: 24,
+      nameChessman: 'pawn',
+      move: false,
+      image: 'wP.png',
+      point: 10,
+      point_bonus: 0,
+      availablePosition: []
+    },
   },
   ],
   [
@@ -503,8 +620,17 @@ export let keyBoard = [
       idKeyBoard: 57,
       position: [7, 0],
       highlightPosition: 'normal',
-      status: 'blank',
-      chessman: null,
+      status: 'occupy',
+      chessman: {
+        color: 'white',
+        idChessman: 25,
+        nameChessman: 'castle',
+        move: false,
+        image: 'wR.png',
+        point: 50,
+        point_bonus: 0,
+        availablePosition: []
+      }
     },
     {
       idKeyBoard: 58,
@@ -513,7 +639,39 @@ export let keyBoard = [
       status: 'occupy',
       chessman: {
         color: 'white',
-        idChessman: 20,
+        idChessman: 26,
+        nameChessman: 'knight',
+        move: false,
+        image: 'wN.png',
+        point: 30,
+        point_bonus: 0,
+        availablePosition: []
+      }
+    },
+    {
+      idKeyBoard: 59,
+      position: [7, 2],
+      highlightPosition: 'normal',
+      status: 'occupy',
+      chessman: {
+        color: 'white',
+        idChessman: 27,
+        nameChessman: 'bishop',
+        move: false,
+        image: 'wB.png',
+        point: 30,
+        point_bonus: 0,
+        availablePosition: []
+      },
+    },
+    {
+      idKeyBoard: 60,
+      position: [7, 3],
+      highlightPosition: 'normal',
+      status: 'occupy',
+      chessman: {
+        color: 'white',
+        idChessman: 28,
         nameChessman: 'queen',
         move: false,
         image: 'wQ.png',
@@ -523,41 +681,13 @@ export let keyBoard = [
       },
     },
     {
-      idKeyBoard: 59,
-      position: [7, 2],
-      highlightPosition: 'normal',
-      status: 'blank',
-      chessman: null,
-    },
-    {
-      idKeyBoard: 60,
-      position: [7, 3],
-      highlightPosition: 'normal',
-      status: 'blank',
-      chessman: null,
-    },
-    {
       idKeyBoard: 61,
       position: [7, 4],
-      highlightPosition: 'normal',
-      status: 'blank',
-      chessman: null,
-    },
-    {
-      idKeyBoard: 62,
-      position: [7, 5],
-      highlightPosition: 'normal',
-      status: 'blank',
-      chessman: null,
-    },
-    {
-      idKeyBoard: 63,
-      position: [7, 6],
       highlightPosition: 'normal',
       status: 'occupy',
       chessman: {
         color: 'white',
-        idChessman: 21,
+        idChessman: 29,
         nameChessman: 'king',
         move: false,
         image: 'wK.png',
@@ -567,11 +697,52 @@ export let keyBoard = [
       },
     },
     {
+      idKeyBoard: 62,
+      position: [7, 5],
+      highlightPosition: 'normal',
+      status: 'occupy',
+      chessman: {
+        color: 'white',
+        idChessman: 30,
+        nameChessman: 'bishop',
+        move: false,
+        image: 'wB.png',
+        point: 30,
+        point_bonus: 0,
+        availablePosition: []
+      },
+    },
+    {
+      idKeyBoard: 63,
+      position: [7, 6],
+      highlightPosition: 'normal',
+      status: 'occupy',
+      chessman: {
+        color: 'white',
+        idChessman: 31,
+        nameChessman: 'knight',
+        move: false,
+        image: 'wN.png',
+        point: 30,
+        point_bonus: 0,
+        availablePosition: []
+      }
+    },
+    {
       idKeyBoard: 64,
       position: [7, 7],
       highlightPosition: 'normal',
-      status: 'blank',
-      chessman: null,
+      status: 'occupy',
+      chessman: {
+        color: 'white',
+        idChessman: 32,
+        nameChessman: 'castle',
+        move: false,
+        image: 'wR.png',
+        point: 50,
+        point_bonus: 0,
+        availablePosition: []
+      }
     },
   ]
 ];

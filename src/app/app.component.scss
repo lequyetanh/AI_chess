@@ -79,3 +79,8 @@
   top: 120px;
   left: 1250px;
 }
+
+select {
+  overflow-y: auto;
+  max-height: 200px; /* set to the desired height */
+}

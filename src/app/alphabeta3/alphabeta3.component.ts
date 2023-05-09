@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import * as Var from './../common/variable';
 import * as Func from './../common/function';
 import { MyserviceService } from './../myservice.service';
+import { of } from 'rxjs';
+import { mergeMap, delay, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-alphabeta3',
@@ -35,6 +37,11 @@ export class Alphabeta3Component implements OnInit {
     // console.log(this.keyBoard)
     // console.log(Func.getPoint(this.keyBoard))
 
+    of("1").pipe(
+      delay(5000)
+    ).subscribe(()=> {
+      console.log("fuckingggggggggggggggggggg")
+    })
   }
 
   ngOnInit() {
@@ -205,23 +212,23 @@ export class Alphabeta3Component implements OnInit {
               }
 
               // check xem nếu đen ăn trắng thì ...
-              let white = false;
-              for (let i = 0; i < 8; i++) {
-                for (let j = 0; j < 8; j++) {
-                  if (keyBoardValue[i][j].chessman) {
-                    if (keyBoardValue[i][j].chessman.nameChessman == 'king') {
-                      if (keyBoardValue[i][j].chessman.color == 'white') {
-                        white = true;
-                      }
-                    }
-                  }
-                }
-              }
+              // let white = false;
+              // for (let i = 0; i < 8; i++) {
+              //   for (let j = 0; j < 8; j++) {
+              //     if (keyBoardValue[i][j].chessman) {
+              //       if (keyBoardValue[i][j].chessman.nameChessman == 'king') {
+              //         if (keyBoardValue[i][j].chessman.color == 'white') {
+              //           white = true;
+              //         }
+              //       }
+              //     }
+              //   }
+              // }
 
-              if (!white) {
-                this.specialKeyBoard = father_keyBoard.keyBoardDepth4;
-                break;
-              }
+              // if (!white) {
+              //   this.specialKeyBoard = father_keyBoard.keyBoardDepth4;
+              //   break;
+              // }
 
               // ===========================================================
 
