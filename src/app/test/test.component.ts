@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+<!-- import { Component, OnInit } from '@angular/core'; -->
+ import { Component, OnInit } from '@angular/core';
 import {
   HostListener,
   ChangeDetectorRef,
@@ -19,7 +20,7 @@ export class TestComponent implements OnInit {
   timerId: any;
   energy: any = {
     position: [0, 10],
-    point: 10
+    point: 30
   }
   score = 0;
 
